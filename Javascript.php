@@ -118,7 +118,7 @@ class HTML_Javascript extends PEAR
     var $_mode = HTML_JAVASCRIPT_OUTPUT_RETURN
 
     /**
-    * The file to direct the output to 
+    * The file to direct the output to
     *
     * @var    string $_file
     * @access private
@@ -135,16 +135,17 @@ class HTML_Javascript extends PEAR
     {
         $this->PEAR();
     }// }}} HTML_Javascript
-    
-    
+
+
     function setOutputMode($mode = HTML_JAVASCRIPT_OUTPUT_RETURN, $file = NULL)
     {
-        if($mode == HTML_JAVASCRIPT_OUTPUT_FILE) {
+        if($mode == HTML_JAVASCRIPT_OUTPUT_FILE ) {
             if(isset($file) {
                 $this->_file = $file;
             } else {
                 $this->raiseError(HTML_JAVASCRIPT_ERROR_NOFILE);
             }
+        }
         $this->_mode = $mode;
     }
 

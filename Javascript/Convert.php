@@ -147,6 +147,11 @@ class HTML_Javascript_Convert
                             $var, $varname, $global
                         );
                 break;
+            case 'NULL':
+                return HTML_Javascript_Convert::convertArray(
+                            $varname, $global
+                        );
+                break;
             default:
                 return HTML_Javascript_Convert::raiseError(
                         HTML_JAVASCRIPT_ERROR_INVVAR
@@ -214,14 +219,14 @@ class HTML_Javascript_Convert
 
     /**
      * Converts a PHP boolean variable into a JS boolean variable.
-     * Note this function does not check the type of $book, only if
+     * Note this function does not check the type of $bool, only if
      * the expression $bool is true or false.
      *
      * @access public
      * @param  boolean $bool    the boolean variable
      * @param  string  $varname the variable name to declare
      * @param  boolean $global  set to true to make the JS variable global
-     * @return mixed   a PEAR_Error on error or a string  with the declaration
+     * @return string  the value as javascript 
      */
     function convertBoolean($bool, $varname, $global = false)
     {
@@ -235,6 +240,27 @@ class HTML_Javascript_Convert
     }
 
     // }}} convertBoolean
+    // {{{ convertNull
+
+    /**
+     * Converts a PHP null variable into a JS null value.
+     *
+     * @access public
+     * @param  string  $varname the variable name to declare
+     * @param  boolean $global  set to true to make the JS variable global
+     * @return string  the value as javascript 
+     */
+    function convertNull($varname, $global = false)
+    {
+        $var = '';
+        if($global) {
+            $var = 'var ';
+        }
+        return $varname.' = null;'.HTML_JAVASCRIPT_NL;
+    }
+
+    // }}} convertNull
+    
     // {{{ convertArray
 
     /**
@@ -357,6 +383,8 @@ class HTML_Javascript_Convert
                             $val, $varname, $global
                         );
                 break;
+            case 'NULL':
+                return 'null';
             default:
                 return HTML_Javascript_Convert::raiseError(
                         HTML_JAVASCRIPT_ERROR_INVVAR

@@ -28,7 +28,7 @@
   </maintainers>
 
   <release>
-    <version>1.1.0rc1</version>
+    <version>1.1.0</version>
     <date>2003-05-02</date>
     <state>beta</state>
     <license>PHP 3.0</license>
@@ -48,10 +48,12 @@
         <file role="php">Javascript.php</file>
         <dir name="Javascript" role="php">
             <file>Convert.php</file>
+	    <file>Toolsbar.php</file>
         </dir>
         <dir name="examples" role="doc">
             <file>javascript.php</file>
 	    <file>js.php</file>
+	    <file>toolsbar.php</file>
         </dir>
         <dir name="tests" role="test">
             <file>js.php</file>

@@ -116,13 +116,14 @@ class HTML_Javascript extends PEAR
     /**
     * Starts a new script
     *
+    * @param  string  $version Version of Javascript to used (default is 1.3)
     * @access public
     * @return mixed a PEAR_Error if a script has been already started or a string (HTML tag <script language="javascript">)
     */
-    function startScript()
+    function startScript( $version='1.3' )
     {
         $this->_started = true;
-        return "<script language=\"javascript\">\n";
+        return "<script language=\"javascript$version\">\n";
     } // }}} startScript
 
 

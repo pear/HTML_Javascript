@@ -21,8 +21,8 @@
   </maintainers>
 
   <release>
-    <version>0.9</version>
-    <date>2002-07-16</date>
+    <version>0.9.1</version>
+    <date>2002-07-22</date>
     <state>beta</state>
     <license>PHP 2.02</license>
     <notes>
@@ -31,6 +31,9 @@
     <filelist>
     <dir name="/" baseinstalldir="HTML">
         <file role="php">Javascript.php</file>
+    </dir>
+    <dir name="Javascript" baseinstalldir="HTML">
+        <file role="php">Convert.php</file>
     </dir>
   </filelist>
   </release>

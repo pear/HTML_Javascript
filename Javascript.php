@@ -136,7 +136,15 @@ class HTML_Javascript extends PEAR
         $this->PEAR();
     }// }}} HTML_Javascript
 
-
+    // {{{ setOutputMode
+    /**
+    * Set the output mode for the script
+    *
+    * @param  integer $mode the chosen output mode, can be either HTML_JAVASCRIPT_OUTPUT_RETURN, HTML_JAVASCRIPT_OUTPUT_ECHO or HTML_JAVASCRIPT_OUTPUT_FILE
+    * @param  string  $file the path to the file (if $mode is HTML_JAVASCRIPT_OUTPUT_FILE)
+    * @access public
+    * @return mixed   PEAR_Error or true
+    */
     function setOutputMode($mode = HTML_JAVASCRIPT_OUTPUT_RETURN, $file = NULL)
     {
         if($mode == HTML_JAVASCRIPT_OUTPUT_FILE ) {
@@ -147,7 +155,8 @@ class HTML_Javascript extends PEAR
             }
         }
         $this->_mode = $mode;
-    }
+        return true;
+    } // }}} setOutputMode
 
     // {{{ raiseError
     /**
@@ -217,7 +226,11 @@ class HTML_Javascript extends PEAR
 
     //{{{ _out
     /**
+    * Checks the output mode and acts according to it
     *
+    * @param  string  $str the string returned from the calling function
+    * @return mixed   depends on the output mode, $str if it's HTML_JAVASCRIPT_OUTPUT_RETURN, true otherwise
+    * @access private
     */
     function _out($str)
     {
@@ -230,15 +243,22 @@ class HTML_Javascript extends PEAR
                 return $str;
                 break;
             }
+            
             case HTML_JAVASCRIPT_OUTPUT_ECHO: {
                 echo $str;
                 return true;
                 break;
             }
+            
             case HTML_JAVASCRIPT_OUTPUT_FILE: {
                 $fp = fopen($file, 'ab');
                 fwrite($fp, $str);
                 return true;
+                break;
+            }
+            
+            default: {
+                PEAR::raiseError('Invalid output mode');
                 break;
             }
         }

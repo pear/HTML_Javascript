@@ -135,9 +135,11 @@ class HTML_Javascript extends PEAR
     function HTML_Javascript()
     {
         $this->PEAR();
-    }// }}} HTML_Javascript
+    }
 
+    // }}} HTML_Javascript
     // {{{ setOutputMode
+
     /**
     * Set the output mode for the script
     *
@@ -157,9 +159,11 @@ class HTML_Javascript extends PEAR
         }
         $this->_mode = $mode;
         return true;
-    } // }}} setOutputMode
+    }
 
+    // }}} setOutputMode
     // {{{ raiseError
+
     /**
     * A custom error handler
     *
@@ -184,14 +188,14 @@ class HTML_Javascript extends PEAR
             default:
                 return HTML_Javascript_Convert::raiseError('Unknown Error', HTML_JAVASCRIPT_ERROR_UNKNOWN);
                 break;
-                break;
         }
 
         return $ret;
-    }// }}} raiseError
+    }
 
-
+    // }}} raiseError
     // {{{ startScript
+
     /**
     * Starts a new script
     *
@@ -202,12 +206,14 @@ class HTML_Javascript extends PEAR
     function startScript($defer = true)
     {
         $this->_started = true;
-        $ret = $this->_out("<script type=\"text/javascript\"" . $defer ? 'defer="defer"' : '' .  ">\n");
+        $s      = $defer ? 'defer="defer"' : '';
+        $ret    = "<script type=\"text/javascript\" ".$s.">\n";
         return $ret;
-    } // }}} startScript
+    }
 
-
+    // }}} startScript
     // {{{ endScript
+
     /**
     * Used to end the script (</script>)
     *
@@ -223,9 +229,11 @@ class HTML_Javascript extends PEAR
             $ret =  HTML_Javascript::raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
         }
         return $ret;
-    } // }}} endScript
+    }
 
+    // }}} endScript
     //{{{ _out
+
     /**
     * Checks the output mode and acts according to it
     *
@@ -236,9 +244,12 @@ class HTML_Javascript extends PEAR
     function _out($str)
     {
         static $fp;
-        $mode = $this->_mode;
-        $file = $this->_file;
-
+        if( isset($this) ){
+            $mode = $this->_mode;
+            $file = $this->_file;
+        } else {
+            return $str;
+        }
         switch($mode) {
             case HTML_JAVASCRIPT_OUTPUT_RETURN: {
                 return $str;
@@ -257,14 +268,14 @@ class HTML_Javascript extends PEAR
                 return true;
                 break;
             }
-
             default: {
                 PEAR::raiseError('Invalid output mode');
                 break;
             }
         }
-    } // }}} _out
+    }
 
+    // }}} _out
     // {{{ write
     /**
     * A wrapper for document.writeln
@@ -282,10 +293,11 @@ class HTML_Javascript extends PEAR
             $ret = HTML_Javascript::_out('document.writeln("'.HTML_Javascript_Convert::escapeString($str).'")'."\n");
         }
         return $ret;
-    }// }}} write
+    }
 
-
+    // }}} write
     // {{{ writeLine
+
     /**
     * A wrapper for document.writeln with an addtional <br /> tag
     *
@@ -320,10 +332,11 @@ class HTML_Javascript extends PEAR
         $alert  .= $var?$str:'"' . HTML_Javascript_Convert::escapeString($str) . '"';
         $ret = HTML_Javascript::_out($alert.')'."\n");
         return $ret;
-    } // {{{ alert
+    }
 
-
+    // {{{ alert
     // {{{ prompt
+
     /**
     * Opens a propmt (input box)
     *
@@ -343,9 +356,11 @@ class HTML_Javascript extends PEAR
         }
         $ret = HTML_Javascript::_out($assign .' = ' . $prompt);
         return $ret;
-    }// }}} prompt
+    }
 
+    // }}} prompt
     // {{{ popup
+
     /**
     * A method for easy generation of popup windows
     *
@@ -374,9 +389,11 @@ class HTML_Javascript extends PEAR
         }
         $ret = HTML_Javascript::_out($assign . "= window.open(\"$file\", \"$title\", \"width=$width, height=$height, resizable=$attr[0], scrollbars=$attr[1], menubar=$attr[2], toolbar=$attr[3], status=$attr[4], location=$attr[5], top=$attr[6], left=$attr[7]\")\n");
         return $ret;
-    } // }}} popup
+    }
 
+    // }}} popup
     // {{{ popupWrite
+
     /**
     * Creates a new popup window containing a string. Inside the popup windows
     * you can access the opener window with the opener var.
@@ -418,7 +435,10 @@ class HTML_Javascript extends PEAR
 
         $ret = HTML_Javascript::_out($windows);
         return $ret;
-    } // }}} popupWrite
+    }
+
+    // }}} popupWrite
+    // {{{ confirm
 
     /**
     * Creates a box with yes and no buttons
@@ -428,7 +448,6 @@ class HTML_Javascript extends PEAR
     * @param  bool   $var    whether $str is a JS var or not
     * @return string the processed string
     */
-    // {{{ confirm
     function confirm($assign, $str, $var = false)
     {
         if($var) {
@@ -438,6 +457,7 @@ class HTML_Javascript extends PEAR
         }
         $ret = HTML_Javascript::_out($assign . ' = ' . $confirm);
         return $ret;
-    } // }}} confirm
+    }
+    // }}} confirm
 }
 ?>

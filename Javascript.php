@@ -213,9 +213,9 @@ class HTML_Javascript extends PEAR
     {
         if ($this->_started) {
             if ($var) {
-                return $assign.'prompt('.$str.')'."\n";
+                return $assign.'=prompt('.$str.')'."\n";
             } else {
-                return $assign.'("'.$str.'")'."\n";
+                return $assign.'=prompt("'.$str.'")'."\n";
             }
         } else {
             return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);

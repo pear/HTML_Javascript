@@ -32,9 +32,9 @@
     <filelist>
     <dir name="/" baseinstalldir="HTML">
         <file role="php">Javascript.php</file>
-    </dir>
-    <dir name="Javascript" baseinstalldir="HTML">
-        <file role="php">Convert.php</file>
+        <dir name="Javascript" role="php">
+            <file>Convert.php</file>
+        </dir>
     </dir>
   </filelist>
   </release>

@@ -6,9 +6,9 @@
   <name>HTML_Javascript</name>
   <summary>Provides an interface for creating simple JS scripts.</summary>
   <description>
-  Provides two types of methods:
-* Methods for converting PHP variables into JS variables.
-* Methods for performing simple JS operations (document.write, alert, etc.).
+    Provides two classes:
+    HTML_Javascript for performing basic JS operations.
+    HTML_Javascript_Convert for converting variables
   </description>
 
   <maintainers>
@@ -26,7 +26,8 @@
     <state>beta</state>
     <license>PHP 2.02</license>
     <notes>
-      Initial release.
+      * Splitted the package to two classes
+      * Added prompt() in HTML_Javascript
     </notes>
     <filelist>
     <dir name="/" baseinstalldir="HTML">

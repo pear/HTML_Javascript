@@ -508,7 +508,7 @@ class HTML_Javascript_Toolsbar extends HTML_Javascript {
      */
     function out(  )
     {
-        return $this->raiseError(HTML_JAVASCRIPT_NOT_IMPLEMENTED);
+        return $this->_out($this->get());
     }
 
     // }}} out

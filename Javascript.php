@@ -18,8 +18,26 @@
 
 
 //Error codes
+
+/**
+* No script started error
+*
+* @const HTML_JAVASCRIPT_ERROR_NOSTART
+*/
 define('HTML_JAVASCRIPT_ERROR_NOSTART', 500, true);
+
+/**
+* Last script was not ended error
+*
+* @const HTML_JAVASCRIPT_ERROR_NOEND
+*/
 define('HTML_JAVASCRIPT_ERROR_NOEND', 501, true);
+
+/**
+* Invalid variable error
+*
+* @const HTML_JAVASCRIPT_ERROR_INVVAR
+*/
 define('HTML_JAVASCRIPT_ERROR_INVVAR', 502, true);
 
 require_once('PEAR.php');
@@ -115,7 +133,7 @@ class HTML_Javascript extends PEAR
     function convertString($str, $varname, $global = false)
     {
         if (!$this->_started) {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_);
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
         }
         
         $var = '';
@@ -141,7 +159,7 @@ class HTML_Javascript extends PEAR
     function convertVar($var, $varname, $global = false)
     {
         if (!$this->_started) {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_);
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
         }
         
         if (!(is_string($var) OR is_array($var) OR is_bool($var))) {
@@ -202,7 +220,7 @@ class HTML_Javascript extends PEAR
     function convertBoolean($bool, $varname, $global = false)
     {
         if (!$this->_started) {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_);
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
         }
         
         $var = '';
@@ -248,7 +266,7 @@ class HTML_Javascript extends PEAR
     function convertArray($arr, $varname, $global = false)
     {
         if (!$this->_started) {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_);
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
         }
         
         $var = '';

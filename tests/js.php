@@ -31,6 +31,7 @@ echo $js->startScript();
 echo HTML_Javascript_Convert::convertArray( $test, 'arTest', true );
 echo HTML_Javascript::alert('toto');
 echo HTML_Javascript::prompt('toto','toto');
+echo $js->popup('win', './test.html', 'window', 200, 200, false);
 echo $js->endScript();
 ?>
 <script>

@@ -228,4 +228,35 @@ class HTML_Javascript extends PEAR
         }
         return $assign .' = ' . $prompt;
     }// }}} prompt
+
+    // {{{ popup
+    /**
+    * A method for easy generation of popup windows
+    *
+    * @param  string $assign the JS var to assign the window to
+    * @param  string $file   the file that will appear in the new window
+    * @paeam  string $title  the title of the new window
+    * @param  int    $width  the width of the window
+    * @param  int    $height the height of the window
+    * @param  mixed  $attr   an array containing the attributes for the new window, each cell can contain either the ints 1/0 or the strings 'yes'/'no'. the order of attributes: resizable, scrollbars, menubar, toolbar, status, location. can be also a boolean, and then all the attributes are set to yes or no, according to the boolean value.
+    * @param  int   $top    the distance from the top, in pixels.
+    * @param  int   $left   the distance from the left, in pixels.
+    * @return mixed PEAR_Error on error or the processed string.
+    */
+    function popup($assign, $file, $title, $width, $height, $attr, $top = 300, $left = 300)
+    {
+        if(!is_array($attr)) {
+            if(!is_bool($attr)) {
+                PEAR::raiseError('$attr should be either an array or a boolean');
+            } else {
+                if($attr) {
+                    $attr = array('yes', 'yes', 'yes', 'yes', 'yes', 'yes', $top, $left);
+                } else {
+                    $attr = array('no', 'no', 'no', 'no', 'no', 'no', $top, $height);
+                }
+            }
+        }
+        return $assign . "= window.open(\"$file\", \"$title\", \"width=$width, height=$height, resizable=$attr[0], scrollbars=$attr[1], menubar=$attr[2], toolbar=$attr[3], status=$attr[4], location=$attr[5], top=$attr[6], left=$attr[7]\")";  
+    }
+    // }}} popup
 }

@@ -43,7 +43,6 @@ define('HTML_JAVASCRIPT_ERROR_NOEND', 501, true);
 
 require_once('PEAR.php');
 require_once('HTML/Javascript/Convert.php');
-require_once('System.php');
 
 /**
 * A class for performing basic JavaScript operations
@@ -258,7 +257,7 @@ class HTML_Javascript extends PEAR
                 }
             }
         }
-        return $assign . "= window.open(\"$file\", \"$title\", \"width=$width, height=$height, resizable=$attr[0], scrollbars=$attr[1], menubar=$attr[2], toolbar=$attr[3], status=$attr[4], location=$attr[5], top=$attr[6], left=$attr[7]\")\n";  
+        return $assign . "= window.open(\"$file\", \"$title\", \"width=$width, height=$height, resizable=$attr[0], scrollbars=$attr[1], menubar=$attr[2], toolbar=$attr[3], status=$attr[4], location=$attr[5], top=$attr[6], left=$attr[7]\")\n";
     } // }}} popup
 
     // {{{ popupWrite
@@ -278,14 +277,28 @@ class HTML_Javascript extends PEAR
     */
     function popupWrite($assign, $str, $title, $width, $height, $attr, $top = 300, $left = 300)
     {
-        $tmpdir = System::tmpdir();
-        $path   = $tmpdir . '/htmljs_' . time();
+        static  $cnt_popup;
+        $str        = HTML_Javascript_Convert::escapeString($str);
+        $assign     = strlen($assign)==0?'pearpopup'.$cnt_popup++:$assign;
 
-        $fd = fopen($path, 'w');
-        fwrite($fd, $str);
-        fclose($fd);
+        if($attr) {
+            $attr = array('yes', 'yes', 'yes', 'yes', 'yes', 'yes', $top, $left);
+        } else {
+            $attr = array('no', 'no', 'no', 'no', 'no', 'no', $top, $height);
+        }
 
-        return HTML_Javascript::popup($assign, $path, $title, $width, $height, $attr, $top, $left);
+        $windows = $assign . "= window.open(\"\", \"$title\", \"width=$width, height=$height, resizable=$attr[0], scrollbars=$attr[1], menubar=$attr[2], toolbar=$attr[3], status=$attr[4], location=$attr[5], top=$attr[6], left=$attr[7]\")\n";
+
+        $windows    .= "
+                        $assign.focus();
+                        $assign.document.open();
+                        $assign.document.write('$str');
+                        $assign.document.close();
+
+                        if ($assign.opener == null) $assign.opener = self;
+                      ";
+
+        return $windows;
     } // }}} popupWrite
 
     /**

@@ -205,7 +205,7 @@ class HTML_Javascript
     function raiseError($code)
     {
         $ret = null;
-        include_once('PEAR.php');
+        require_once 'PEAR.php';
         switch ($code) {
             case HTML_JAVASCRIPT_ERROR_NOSTART:
                 $ret = PEAR::raiseError(
@@ -226,7 +226,7 @@ class HTML_Javascript
                         );
                 break;
             default:
-                return HTML_Javascript_Convert::raiseError(
+                return PEAR::raiseError(
                         'Unknown Error',
                         HTML_JAVASCRIPT_ERROR_UNKNOWN
                         );

@@ -168,6 +168,7 @@ class HTML_Javascript_Convert
      */
     function raiseError($code)
     {
+        require_once 'HTML/Javascript.php';
         $ret = null;
         switch ($code) {
             case HTML_JAVASCRIPT_ERROR_INVVAR:
@@ -281,6 +282,7 @@ class HTML_Javascript_Convert
             }
             return $var;
         } else {
+            require_once 'HTML/Javasript.php';
             return HTML_Javascript::raiseError(
                         HTML_JAVASCRIPT_ERROR_INVVAR
                     );

@@ -12,8 +12,8 @@
 // | obtain it through the world-wide-web, please send a note to          |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Author: Tal Peer <tal@php.net>                                       |
-// |                                                                      |
+// | Authors: Tal Peer <tal@php.net>                                      |
+// |          Pierre-Alain Joye <paj@pearfr.org>                                                            |
 // +----------------------------------------------------------------------+
 
 
@@ -56,6 +56,7 @@ require_once('PEAR.php');
 * - API cleanups...
 *
 * @author Tal Peer <tal@php.net>
+* @author Pierre-Alain Joye <paj@pearfr.org>
 * @package HTML_Javascript
 * @version 0.9
 * @access public

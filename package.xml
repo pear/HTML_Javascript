@@ -39,7 +39,7 @@
         * Added arrayToProperties (pajoye)
         * Added convertValue, returns only the JS equivalent value (pajoye)
         * Cleanup errors
-        * phpdoc fixes & cleanup, supports of phpdocumentor 
+        * phpdoc fixes and cleanup, supports of phpdocumentor 
 	* The next releases of 1.x branch will contain only bugfixes.
 	  We start from the 2.0 dev branch.
     </notes>
@@ -49,8 +49,8 @@
         <dir name="Javascript" role="php">
             <file>Convert.php</file>
         </dir>
-        <dir name="examples" role="docs">
-            <file>javscript.php</file>
+        <dir name="examples" role="doc">
+            <file>javascript.php</file>
 	    <file>js.php</file>
         </dir>
         <dir name="tests" role="test">

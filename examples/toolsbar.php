@@ -12,8 +12,6 @@ html, body {
 a:link, a:visited { color: #00f; }
 a:hover { color: #048; }
 a:active { color: #f00; }
-
-textarea { background-color: #fff; border: 1px solid 00f; }
 </style>
 <script type="text/javascript" src="browserSniffer.js"></script>
 <script src="pear/html/javascript/toolsbar.js"></script>

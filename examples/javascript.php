@@ -48,7 +48,7 @@ echo $htmljs->alert('I will ask you three questions and write back the answers.'
  * of HTML_Javascript ($str, as a 1st argument).
  * The result (boolean) is stored in a JS variable given as a 2nd arg, here likehtmljs
  */
-echo $htmljs->confirm('likehtmljs','Do you like HTML_Javascript?');
+echo $htmljs->confirm('Do you like HTML_Javascript?','likehtmljs');
 echo $htmljs->write('Do you like HTML_Javascript? Your answer:');
 echo $htmljs->writeLine('likehtmljs',true);
 

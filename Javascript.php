@@ -70,6 +70,11 @@ define('HTML_JAVASCRIPT_ERROR_NOEND', 501, true);
  */
 define('HTML_JAVASCRIPT_ERROR_NOFILE', 505, true);
 
+/**
+ * Cannot open file in write mode
+ */
+define('HTML_JAVASCRIPT_ERROR_WRITEFILE', 506, true);
+
 //Output modes
 /**
  * Just return the results (default mode)
@@ -310,8 +315,11 @@ class HTML_Javascript
             }
 
             case HTML_JAVASCRIPT_OUTPUT_FILE: {
-                $fp = fopen($file, 'ab');
-                fwrite($fp, $str);
+                if ($fp = @fopen($file, 'ab')){
+                    fwrite($fp, $str);
+                } else {
+                    HTML_Javascript::raiseError(HTML_JAVASCRIPT_ERROR_WRITEFILE);
+                }
                 return true;
                 break;
             }
@@ -412,7 +420,7 @@ class HTML_Javascript
      * @param  bool   $var      whether $str is a JS var or not
      * @return string the processed string
      */
-    function confirm($assign, $str, $var = false)
+    function confirm($str,$assign, $var = false)
     {
         if($var) {
             $confirm = 'confirm(' . $str . ')' . HTML_JAVASCRIPT_NL;

@@ -192,20 +192,24 @@ class HTML_Javascript extends PEAR
     */
     function raiseError($code)
     {
+        $ret = null;
+        
         switch ($code) {
             case HTML_JAVASCRIPT_ERROR_NOSTART:
-                PEAR::raiseError('No script started', HTML_JAVASCRIPT_ERROR_NOSTART);
+                $ret = PEAR::raiseError('No script started', HTML_JAVASCRIPT_ERROR_NOSTART);
                 break;
             case HTML_JAVASCRIPT_ERROR_NOEND:
-                PEAR::raiseError('Last script was not ended', HTML_JAVASCRIPT_ERROR_NOEND);
+                $ret = PEAR::raiseError('Last script was not ended', HTML_JAVASCRIPT_ERROR_NOEND);
                 break;
             case HTML_JAVASCRIPT_ERROR_INVVAR:
-                PEAR::raiseError('Invalid variable', HTML_JAVASCRIPT_ERROR_INVVAR);
+                $ret = PEAR::raiseError('Invalid variable', HTML_JAVASCRIPT_ERROR_INVVAR);
                 break;
             default:
-                return false;
+                $ret = false;
                 break;
         }
+        
+        return $ret;
     }
 
     /**

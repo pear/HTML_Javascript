@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE package SYSTEM "../package.dtd">
+<package version="0.9">
+  <name>HTML_Javascript</name>
+  <summary>Provides methods to convert PHP variables into JS variables and basic JS operations.</summary>
+  <description>
+HTML_Javascript provides two types of methods:
+* Methods for converting PHP variables into Javascript variables
+* Methods to perform some basic Javascript operations
+  </description>
+  <license>PHP License</license>
+  <maintainers>
+    <maintainer>
+      <user>tal</user>
+      <name>Tal Peer</name>
+      <email>tal@php.net</email>
+      <role>lead</role>
+    </maintainer>
+  </maintainers>
+  <release>
+    <version>0.9</version>
+    <date>2002-05-31</date>
+    <state>beta</state>
+    <notes>
+First release.
+    </notes>
+    <filelist>
+      <dir name="/" baseinstalldir="HTML">
+        <file role="php">Javascript.php</file>
+      </dir>
+    </filelist>
+  </release>
+</package>

@@ -27,7 +27,7 @@
   </maintainers>
 
   <release>
-    <version>1.0.0</version>
+    <version>1.x.0</version>
     <date>2002-07-30</date>
     <state>stable</state>
     <license>PHP 2.02</license>
@@ -47,6 +47,10 @@
         <file role="php">Javascript.php</file>
         <dir name="Javascript" role="php">
             <file>Convert.php</file>
+        </dir>
+        <dir name="examples" role="docs">
+            <file>javscript.php</file>
+	    <file>convert.php</file>
         </dir>
         <dir name="tests" role="test">
             <file>js.php</file>

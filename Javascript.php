@@ -62,8 +62,8 @@ require_once('System.php');
 * TODO:
 * - Error handler
 * - Validation mechanism
-* - Popups
 * - Rollovers
+* - Add optional output direction to .js files
 *
 * @author Tal Peer <tal@php.net>
 * @author Pierre-Alain Joye <paj@pearfr.org>

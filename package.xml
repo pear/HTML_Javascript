@@ -27,15 +27,22 @@
   </maintainers>
 
   <release>
-    <version>0.9.2</version>
-    <date>2002-07-22</date>
-    <state>beta</state>
+    <version>1.0.0</version>
+    <date>2002-07-30</date>
+    <state>stable</state>
     <license>PHP 2.02</license>
     <notes>
         Bugfix release:
-        * Fixed prompt() (Pierre)
-        * Fixed order of installed files (Pierre)
-        * Added Pierre to maintainers (Tal)
+        * Fixed prompt() (pajoye)
+        * Fixed order of installed files (pajoye)
+        * Fixed convertVar input tests (pajoye)
+        * Added multi-dimensional arrays support (pajoye)
+        * Added associative arrays support (pajoye)
+        * Added default error to match the mixed return value (pajoye)
+        * Fixed write and writeln methods, escaped string (pajoye)
+        * Removed checks if the startScript() method has been called
+          it allows the foo:foobar() syntax
+        * Added Pierre (pajoye) to maintainers (Tal)
     </notes>
     <filelist>
     <dir name="/" baseinstalldir="HTML">

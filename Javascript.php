@@ -259,8 +259,7 @@ class HTML_Javascript extends PEAR
             }
         }
         return $assign . "= window.open(\"$file\", \"$title\", \"width=$width, height=$height, resizable=$attr[0], scrollbars=$attr[1], menubar=$attr[2], toolbar=$attr[3], status=$attr[4], location=$attr[5], top=$attr[6], left=$attr[7]\")\n";  
-    }
-    // }}} popup
+    } // }}} popup
 
     // {{{ popupWrite
     /**
@@ -286,7 +285,25 @@ class HTML_Javascript extends PEAR
         fwrite($fd, $str);
         fclose($fd);
 
-        return $this->popup($assign, $path, $title, $width, $height, $attr, $top, $left);
-    }
-    /// }}} popupWrite
+        return HTML_Javascript::popup($assign, $path, $title, $width, $height, $attr, $top, $left);
+    } // }}} popupWrite
+
+    /**
+    * Creates a box with yes and no buttons
+    *
+    * @param  string $assign the JS variable to assign the confirmation box to
+    * @param  string $str    the string that will appear in the confirmation box
+    * @param  bool   $var    whether $str is a JS var or not
+    * @return string the processed string
+    */
+    // {{{ confirm
+    function confirm($assign, $str, $var = false)
+    {
+        if($var) {
+            $confirm = 'confirm(' . $str . ')' . "\n";
+        } else {
+            $confirm = 'confirm("' . HTML_Javascript_Convert::escapeString($str) . '")' . "\n";
+        }
+        return $assign . ' = ' . $confirm;
+    } // }}} confirm
 }

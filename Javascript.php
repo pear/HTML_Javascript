@@ -26,7 +26,7 @@
 * @const HTML_JAVASCRIPT_ERROR_NOSTART
 */
 define('HTML_JAVASCRIPT_ERROR_NOSTART', 500, true);
-
+define('HTML_JAVASCRIPT_ERROR_UNKNOWN', 599, true);
 /**
 * Last script was not ended error
 *
@@ -103,7 +103,8 @@ class HTML_Javascript extends PEAR
                 $ret = PEAR::raiseError('Last script was not ended', HTML_JAVASCRIPT_ERROR_NOEND);
                 break;
             default:
-                $ret = false;
+                return HTML_Javascript_Convert::raiseError('Unknown Error', HTML_JAVASCRIPT_ERROR_UNKNOWN);
+                break;
                 break;
         }
 

@@ -91,20 +91,21 @@ require_once('HTML/Javascript/Convert.php');
 * - Error handler
 * - Validation mechanism
 * - Rollovers
-* - Add optional output direction to .js files
+* - Importation from external files
+* - Themed popups
 *
-* @author Tal Peer <tal@php.net>
-* @author Pierre-Alain Joye <paj@pearfr.org>
+* @author  Tal Peer <tal@php.net>
+* @author  Pierre-Alain Joye <paj@pearfr.org>
 * @package HTML_Javascript
 * @version 1.0.0
-* @access public
+* @access  public
 */
 class HTML_Javascript extends PEAR
 {
     /**
     * Used to determaine if a script has been started
     *
-    * @var boolean $_started
+    * @var    boolean $_started
     * @access private
     */
     var $_started = false;

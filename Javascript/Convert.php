@@ -54,9 +54,6 @@ if(!defined('HTML_JAVASCRIPT_NL')){
     define('HTML_JAVASCRIPT_NL',"\n");
 }
 
-/** requires PEAR_Error */
-require_once('PEAR.php');
-
 /**
  * PHP to Javascript conversion classes
  *
@@ -67,17 +64,6 @@ require_once('PEAR.php');
  */
 class HTML_Javascript_Convert
 {
-    // {{{ HTML_Javscript_Convert
-
-    /**
-     * Constructor - creates a new HTML_Javascript_Convert object
-     *
-     */
-    function HTML_Javscript_Convert()
-    {
-    }
-
-    // }}} HTML_Javscript_Convert
     // {{{ escapeString
 
     /**
@@ -127,7 +113,6 @@ class HTML_Javascript_Convert
                 return HTML_Javascript_Convert::convertBoolean(
                             $var, $varname, $global
                         );
-                break;
             case 'integer':
             case 'double':
                 $ret = '';
@@ -136,27 +121,22 @@ class HTML_Javascript_Convert
                 }
                 $ret .= $varname.' = '.$var;
                 return $ret.';'.HTML_JAVASCRIPT_NL;
-                break;
             case 'string':
                 return HTML_Javascript_Convert::convertString(
                             $var, $varname, $global
                         );
-                break;
             case 'array':
                 return HTML_Javascript_Convert::convertArray(
                             $var, $varname, $global
                         );
-                break;
             case 'NULL':
-                return HTML_Javascript_Convert::convertArray(
+                return HTML_Javascript_Convert::convertNull(
                             $varname, $global
                         );
-                break;
             default:
                 return HTML_Javascript_Convert::raiseError(
-                        HTML_JAVASCRIPT_ERROR_INVVAR
+                        HTML_JAVASCRIPT_ERROR_CONVERT_INVVAR, __FUNCTION__.':'.$var_type
                     );
-                break;
         }
     }
 
@@ -171,23 +151,19 @@ class HTML_Javascript_Convert
      * @return mixed   false if the error code is invalid,
      *                 or a PEAR_Error otherwise
      */
-    function raiseError($code)
+    function raiseError($code,$str='')
     {
-        require_once 'HTML/Javascript.php';
-        $ret = null;
-        switch ($code) {
-            case HTML_JAVASCRIPT_ERROR_INVVAR:
-                $ret = HTML_Javascript::raiseError(
-                        'Invalid variable', HTML_JAVASCRIPT_ERROR_INVVAR
-                        );
-                break;
+        require_once('PEAR.php');
+	switch ($code) {
+            case HTML_JAVASCRIPT_CONVERT_ERROR_INVVAR:
+                return PEAR::raiseError(
+                    'Invalid variable:'.$str, $code 
+                );
             default:
-                $ret = HTML_Javascript::raiseError(
-                    'Unknown Error', HTML_JAVASCRIPT_ERROR_INVVAR
-                    );
-                break;
+                return PEAR::raiseError(
+                    'Unknown Error:'.$str, $code 
+                );
         }
-        return $ret;
     }
 
     // }}} raiseError
@@ -308,9 +284,8 @@ class HTML_Javascript_Convert
             }
             return $var;
         } else {
-            require_once 'HTML/Javascript.php';
-            return HTML_Javascript::raiseError(
-                        HTML_JAVASCRIPT_ERROR_INVVAR
+            return HTML_Javascript_Convert::raiseError(
+                        HTML_JAVASCRIPT_CONVERT_ERROR_INVVAR, __FUNCTION__.':'.gettype($arr)
                     );
         }
     }
@@ -372,7 +347,7 @@ class HTML_Javascript_Convert
     {
         switch ( gettype($val) ) {
             case 'boolean':
-                return $val?'true':'false';
+                return $val ? 'true' : 'false';
             case 'integer':
             case 'double':
                 return $val;
@@ -382,14 +357,12 @@ class HTML_Javascript_Convert
                 return HTML_Javascript_Convert::convertArray(
                             $val, $varname, $global
                         );
-                break;
             case 'NULL':
                 return 'null';
             default:
                 return HTML_Javascript_Convert::raiseError(
-                        HTML_JAVASCRIPT_ERROR_INVVAR
+                        HTML_JAVASCRIPT_ERROR_CONVERT_INVVAR, __FUNCTION__.':'.gettype($val)
                     );
-                break;
         }
     }
 

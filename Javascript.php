@@ -59,6 +59,11 @@ require_once('PEAR.php');
 * echo $js->endScript();
 * echo "</body></html>";
 *
+* TODO:
+* - Add support for multidimensional arrays in convertArray()
+* - Add more JS operations (prompt, functions, interaction with forms)
+* - Cleanup the API
+*
 * @author Tal Peer <tal@php.net>
 * @package HTML
 * @version 0.9-dev

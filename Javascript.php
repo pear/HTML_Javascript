@@ -202,7 +202,7 @@ class HTML_Javascript extends PEAR
     function startScript($defer = true)
     {
         $this->_started = true;
-        $ret = _out("<script type=\"text/javascript\"" . $defer ? 'defer="defer"' : '' .  ">\n");
+        $ret = $this->_out("<script type=\"text/javascript\"" . $defer ? 'defer="defer"' : '' .  ">\n");
         return $ret;
     } // }}} startScript
 
@@ -244,27 +244,27 @@ class HTML_Javascript extends PEAR
                 return $str;
                 break;
             }
-            
+
             case HTML_JAVASCRIPT_OUTPUT_ECHO: {
                 echo $str;
                 return true;
                 break;
             }
-            
+
             case HTML_JAVASCRIPT_OUTPUT_FILE: {
                 $fp = fopen($file, 'ab');
                 fwrite($fp, $str);
                 return true;
                 break;
             }
-            
+
             default: {
                 PEAR::raiseError('Invalid output mode');
                 break;
             }
         }
     } // }}} _out
-    
+
     // {{{ write
     /**
     * A wrapper for document.writeln

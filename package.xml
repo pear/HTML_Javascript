@@ -9,6 +9,7 @@
     Provides two classes:
     HTML_Javascript for performing basic JS operations.
     HTML_Javascript_Convert for converting variables
+    Allow output data to a file, to the standart output(print), or return
   </description>
 
   <maintainers>
@@ -27,20 +28,20 @@
   </maintainers>
 
   <release>
-    <version>1.x.0</version>
-    <date>2002-07-30</date>
+    <version>1.1.0rc1</version>
+    <date>2003-05-02</date>
     <state>stable</state>
-    <license>PHP 2.02</license>
+    <license>PHP 3.0</license>
     <notes>
+        * Licence changed to PHP Licence 3.0
         New features and bug fixes:
-        * Fixed convertVar input tests (pajoye)
-        * Added multi-dimensional arrays support (pajoye)
-        * Added associative arrays support (pajoye)
-        * Added default error to match the mixed return value (pajoye)
-        * Fixed write and writeln methods, escaped string (pajoye)
-        * Removed checks if the startScript() method has been called
-          it allows the foo::foobar() syntax
-        * Added Pierre (pajoye) as a lead maintainer (Tal)
+        * Fixed convertString 
+        * Added arrayToProperties (pajoye)
+        * Added convertValue, returns only the JS equivalent value (pajoye)
+        * Cleanup errors
+        * phpdoc fixes & cleanup, supports of phpdocumentor 
+	* The next releases of 1.x branch will contain only bugfixes.
+	  We start from the 2.0 dev branch.
     </notes>
     <filelist>
     <dir name="/" baseinstalldir="HTML">
@@ -50,10 +51,11 @@
         </dir>
         <dir name="examples" role="docs">
             <file>javscript.php</file>
-	    <file>convert.php</file>
+	    <file>js.php</file>
         </dir>
         <dir name="tests" role="test">
             <file>js.php</file>
+	    <file>output.php</file>
         </dir>
     </dir>
   </filelist>

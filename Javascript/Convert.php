@@ -259,7 +259,6 @@ class HTML_Javascript_Convert
             $length = sizeof($arr);
             $var    .= $varname . ' = Array('. $length .')'.HTML_JAVASCRIPT_NL;
             foreach ( $arr as $key=>$cell ){
-                //$jskey  = is_int($key)?$key:'"' . $key . '"';
                 $jskey  = '"' . $key . '"';
                 if ( is_array( $cell ) ){
                     $level++;

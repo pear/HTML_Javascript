@@ -115,7 +115,7 @@ class HTML_Javascript extends PEAR
     * @var    integer $_mode
     * @access private
     */
-    var $_mode = HTML_JAVASCRIPT_OUTPUT_RETURN
+    var $_mode = HTML_JAVASCRIPT_OUTPUT_RETURN;
 
     /**
     * The file to direct the output to
@@ -140,7 +140,7 @@ class HTML_Javascript extends PEAR
     function setOutputMode($mode = HTML_JAVASCRIPT_OUTPUT_RETURN, $file = NULL)
     {
         if($mode == HTML_JAVASCRIPT_OUTPUT_FILE ) {
-            if(isset($file) {
+            if(isset($file)) {
                 $this->_file = $file;
             } else {
                 $this->raiseError(HTML_JAVASCRIPT_ERROR_NOFILE);
@@ -192,7 +192,8 @@ class HTML_Javascript extends PEAR
     function startScript($defer = true)
     {
         $this->_started = true;
-        return "<script type=\"text/javascript\"" . $defer ? 'defer="defer"' : '' .  ">\n";
+        $ret = _out("<script type=\"text/javascript\"" . $defer ? 'defer="defer"' : '' .  ">\n");
+        return $ret;
     } // }}} startScript
 
 
@@ -207,13 +208,42 @@ class HTML_Javascript extends PEAR
     {
         if ($this->_started) {
             $this->_started = false;
-            return "</script>\n";
+            $ret =  "</script>\n";
         } else {
-            return HTML_Javascript::raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
+            $ret =  HTML_Javascript::raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
         }
+        return $ret;
     } // }}} endScript
 
+    //{{{ _out
+    /**
+    *
+    */
+    function _out($str)
+    {
+        static $fp;
+        $mode = $this->_mode;
+        $file = $this->_file;
 
+        switch($mode) {
+            case HTML_JAVASCRIPT_OUTPUT_RETURN: {
+                return $str;
+                break;
+            }
+            case HTML_JAVASCRIPT_OUTPUT_ECHO: {
+                echo $str;
+                return true;
+                break;
+            }
+            case HTML_JAVASCRIPT_OUTPUT_FILE: {
+                $fp = fopen($file, 'ab');
+                fwrite($fp, $str);
+                return true;
+                break;
+            }
+        }
+    } // }}} _out
+    
     // {{{ write
     /**
     * A wrapper for document.writeln
@@ -226,10 +256,11 @@ class HTML_Javascript extends PEAR
     function write($str, $var = false)
     {
         if ($var) {
-            return 'document.writeln('.$str.')'."\n";
+            $ret = HTML_Javascript::_out('document.writeln('.$str.')'."\n");
         } else {
-            return 'document.writeln("'.HTML_Javascript_Convert::escapeString($str).'")'."\n";
+            $ret = HTML_Javascript::_out('document.writeln("'.HTML_Javascript_Convert::escapeString($str).'")'."\n");
         }
+        return $ret;
     }// }}} write
 
 
@@ -245,10 +276,11 @@ class HTML_Javascript extends PEAR
     function writeLine($str, $var = false)
     {
         if ($var) {
-            return 'document.writeln('.$str.'+"<br />")'."\n";
+            $ret = HTML_Javascript::_out('document.writeln('.$str.'+"<br />")'."\n");
         } else {
-            return 'document.writeln("'.HTML_Javascript_Convert::escapeString($str).'"+"<br />")'."\n";
+            $ret = HTML_Javascript::_out('document.writeln("'.HTML_Javascript_Convert::escapeString($str).'"+"<br />")'."\n");
         }
+        return $ret;
     }// }}} writeLine
 
 
@@ -265,7 +297,8 @@ class HTML_Javascript extends PEAR
     {
         $alert  = 'alert(';
         $alert  .= $var?$str:'"' . HTML_Javascript_Convert::escapeString($str) . '"';
-        return $alert.')'."\n";
+        $ret = HTML_Javascript::_out($alert.')'."\n");
+        return $ret;
     } // {{{ alert
 
 
@@ -287,7 +320,8 @@ class HTML_Javascript extends PEAR
 
             $prompt = 'prompt("'.HTML_Javascript_Convert::escapeString($str).'", "'.$default.'")'."\n";
         }
-        return $assign .' = ' . $prompt;
+        $ret = HTML_Javascript::_out($assign .' = ' . $prompt);
+        return $ret;
     }// }}} prompt
 
     // {{{ popup
@@ -317,7 +351,8 @@ class HTML_Javascript extends PEAR
                 }
             }
         }
-        return $assign . "= window.open(\"$file\", \"$title\", \"width=$width, height=$height, resizable=$attr[0], scrollbars=$attr[1], menubar=$attr[2], toolbar=$attr[3], status=$attr[4], location=$attr[5], top=$attr[6], left=$attr[7]\")\n";
+        $ret = HTML_Javascript::_out($assign . "= window.open(\"$file\", \"$title\", \"width=$width, height=$height, resizable=$attr[0], scrollbars=$attr[1], menubar=$attr[2], toolbar=$attr[3], status=$attr[4], location=$attr[5], top=$attr[6], left=$attr[7]\")\n");
+        return $ret;
     } // }}} popup
 
     // {{{ popupWrite
@@ -360,7 +395,8 @@ class HTML_Javascript extends PEAR
                         }
                       ";
 
-        return $windows;
+        $ret = HTML_Javascript::_out($windows);
+        return $ret;
     } // }}} popupWrite
 
     /**
@@ -379,7 +415,8 @@ class HTML_Javascript extends PEAR
         } else {
             $confirm = 'confirm("' . HTML_Javascript_Convert::escapeString($str) . '")' . "\n";
         }
-        return $assign . ' = ' . $confirm;
+        $ret = HTML_Javascript::_out($assign . ' = ' . $confirm);
+        return $ret;
     } // }}} confirm
 }
 ?>

@@ -126,14 +126,14 @@ class HTML_Javascript extends PEAR
     /**
     * Starts a new script
     *
-    * @param  string  $version Version of Javascript to used (default is 1.3)
+    * @param  bool   $defer whether to wait for the whole page to load before starting the script or no
     * @access public
-    * @return mixed a PEAR_Error if a script has been already started or a string (HTML tag <script language="javascript">)
+    * @return mixed  a PEAR_Error if a script has been already started or a string (HTML tag <script>)
     */
-    function startScript( $version='1.3' )
+    function startScript($defer = true)
     {
         $this->_started = true;
-        return "<script language=\"javascript$version\">\n";
+        return "<script type=\"text/javascript\"" . $defer ? 'defer="defer"' : '' .  ">\n";
     } // }}} startScript
 
 
@@ -214,18 +214,19 @@ class HTML_Javascript extends PEAR
     /**
     * Opens a propmt (input box)
     *
-    * @param  string $str    the string that will appear in the prompt
-    * @param  string $assign the JS var that the input will be assigned to
-    * @param  string $var    wether $str is a JS var or not
+    * @param  string $str     the string that will appear in the prompt
+    * @param  string $assign  the JS var that the input will be assigned to
+    * @paeam  string $default the default value
+    * @param  string $var     wether $str is a JS var or not
     * @return mixed  PEAR_Error or the processed string
     */
-    function prompt($str, $assign, $var = false)
+    function prompt($str, $assign, $default = '', $var = false)
     {
         if ($var) {
-            $prompt = 'prompt('.$str.')'."\n";
+            $prompt = 'prompt('.$str.', "'.$default.')"'."\n";
         } else {
 
-            $prompt = 'prompt("'.HTML_Javascript_Convert::escapeString($str).'")'."\n";
+            $prompt = 'prompt("'.HTML_Javascript_Convert::escapeString($str).'", "'.$default.'")'."\n";
         }
         return $assign .' = ' . $prompt;
     }// }}} prompt

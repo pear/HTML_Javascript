@@ -69,10 +69,11 @@ class HTML_Javascript_Convert extends PEAR
     function escapeString($str)
     {
         $js_escape = array(
-            "\r" => '\r',
-            "\n" => '\n',
-            "\t" => '\t',
-            "'" => "\\'",
+            "\r"    => '\r',
+            "\n"    => '\n',
+            "\t"    => '\t',
+            "'"     => "\\'",
+            '"'     => '\"',
             '\\' => '\\\\'
         );
 

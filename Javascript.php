@@ -262,7 +262,8 @@ class HTML_Javascript extends PEAR
 
     // {{{ popupWrite
     /**
-    * Creates a new popup window containing a string
+    * Creates a new popup window containing a string. Inside the popup windows
+    * you can access the opener window with the opener var.
     *
     * @param  string $assign the JS variable to assign the window to
     * @param  string $str    the string that will appear in the new window (HTML tags would be parsed by the browser, of course)
@@ -290,12 +291,13 @@ class HTML_Javascript extends PEAR
         $windows = $assign . "= window.open(\"\", \"$title\", \"width=$width, height=$height, resizable=$attr[0], scrollbars=$attr[1], menubar=$attr[2], toolbar=$attr[3], status=$attr[4], location=$attr[5], top=$attr[6], left=$attr[7]\")\n";
 
         $windows    .= "
-                        $assign.focus();
-                        $assign.document.open();
-                        $assign.document.write('$str');
-                        $assign.document.close();
-
-                        if ($assign.opener == null) $assign.opener = self;
+                        if ($assign){
+                            $assign.focus();
+                            $assign.document.open();
+                            $assign.document.write('$str');
+                            $assign.document.close();
+                            if ($assign.opener == null) $assign.opener = self;
+                        }
                       ";
 
         return $windows;

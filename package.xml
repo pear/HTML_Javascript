@@ -30,7 +30,7 @@
   <release>
     <version>1.1.0rc1</version>
     <date>2003-05-02</date>
-    <state>stable</state>
+    <state>beta</state>
     <license>PHP 3.0</license>
     <notes>
         * Licence changed to PHP Licence 3.0

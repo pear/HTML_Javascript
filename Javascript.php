@@ -41,6 +41,35 @@ define('HTML_JAVASCRIPT_ERROR_UNKNOWN', 599, true);
 */
 define('HTML_JAVASCRIPT_ERROR_NOEND', 501, true);
 
+/**
+* No file was specified for setOutputMode()
+*
+* @const HTML_JAVASCRIPT_ERROR_NOFILE
+*/
+define('HTML_JAVASCRIPT_ERROR_NOFILE', 505, true);
+
+//Output modes
+/**
+* Just return the results (default mode)
+*
+* @const HTML_JAVASCRIPT_OUTPUT_RETURN
+*/
+define('HTML_JAVASCRIPT_OUTPUT_RETURN', 0);
+
+/**
+* Echo (print) the results directly to browser
+*
+* @const HTML_JAVASCRIPT_OUTPUT_ECHO
+*/
+define('HTML_JAVASCRIPT_OUTPUT_ECHO', 1);
+
+/**
+* Print the results to a file
+*
+* @const HTML_JAVASCRIPT_OUTPUT_FILE
+*/
+define('HTML_JAVASCRIPT_OUTPUT_FILE', 2);
+
 require_once('PEAR.php');
 require_once('HTML/Javascript/Convert.php');
 
@@ -80,6 +109,22 @@ class HTML_Javascript extends PEAR
     */
     var $_started = false;
 
+    /**
+    * The output mode specified for the script
+    *
+    * @var    integer $_mode
+    * @access private
+    */
+    var $_mode = HTML_JAVASCRIPT_OUTPUT_RETURN
+
+    /**
+    * The file to direct the output to 
+    *
+    * @var    string $_file
+    * @access private
+    */
+    var $_file = '';
+
     // {{{ HTML_Javascript
     /**
     * Constructor - creates a new HTML_Javascript object
@@ -90,7 +135,18 @@ class HTML_Javascript extends PEAR
     {
         $this->PEAR();
     }// }}} HTML_Javascript
-
+    
+    
+    function setOutputMode($mode = HTML_JAVASCRIPT_OUTPUT_RETURN, $file = NULL)
+    {
+        if($mode == HTML_JAVASCRIPT_OUTPUT_FILE) {
+            if(isset($file) {
+                $this->_file = $file;
+            } else {
+                $this->raiseError(HTML_JAVASCRIPT_ERROR_NOFILE);
+            }
+        $this->_mode = $mode;
+    }
 
     // {{{ raiseError
     /**
@@ -110,6 +166,9 @@ class HTML_Javascript extends PEAR
                 break;
             case HTML_JAVASCRIPT_ERROR_NOEND:
                 $ret = PEAR::raiseError('Last script was not ended', HTML_JAVASCRIPT_ERROR_NOEND);
+                break;
+            case HTML_JAVASCRIPT_ERROR_NOFILE:
+                $ret = PEAR::raiseError('A filename must be specified for setoutputMode()', HTML_JAVASCRIPT_ERROR_NOFILE);
                 break;
             default:
                 return HTML_Javascript_Convert::raiseError('Unknown Error', HTML_JAVASCRIPT_ERROR_UNKNOWN);

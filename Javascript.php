@@ -59,8 +59,10 @@ require_once('HTML/Javascript/Convert.php');
 * echo "</body></html>";
 *
 * TODO:
-* - Add more JS operations (prompt, functions, interaction with forms)
-* - API cleanups...
+* - Error handler
+* - Validation mechanism
+* - Popups
+* - Rollovers
 *
 * @author Tal Peer <tal@php.net>
 * @author Pierre-Alain Joye <paj@pearfr.org>

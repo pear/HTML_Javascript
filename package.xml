@@ -48,12 +48,10 @@
         <file role="php">Javascript.php</file>
         <dir name="Javascript" role="php">
             <file>Convert.php</file>
-	    <file>Toolsbar.php</file>
         </dir>
         <dir name="examples" role="doc">
             <file>javascript.php</file>
 	    <file>js.php</file>
-	    <file>toolsbar.php</file>
         </dir>
         <dir name="tests" role="test">
             <file>js.php</file>

@@ -1,5 +1,23 @@
 <?php
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
+// +----------------------------------------------------------------------+
+// | PHP Version 4                                                        |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 1997-2002 The PHP Group                                |
+// +----------------------------------------------------------------------+
+// | This source file is subject to version 2.0 of the PHP license,       |
+// | that is bundled with this package in the file LICENSE, and is        |
+// | available at through the world-wide-web at                           |
+// | http://www.php.net/license/2_02.txt.                                 |
+// | If you did not receive a copy of the PHP license and are unable to   |
+// | obtain it through the world-wide-web, please send a note to          |
+// | license@php.net so we can mail you a copy immediately.               |
+// +----------------------------------------------------------------------+
+// | Authors: Tal Peer <tal@php.net>                                      |
+// |          Pierre-Alain Joye <paj@pearfr.org>                          |
+// +----------------------------------------------------------------------+
+// $Id $
+
 /**
 * A class for converting PHP variables into JavaScript variables
 *
@@ -12,17 +30,18 @@
 * echo HTML_Javascript_Convert::convertArray($a);
 *
 * @author Tal Peer <tal@php.net>
+* @author Pierre-Alian Joye <paj@pearfr.org>
 * @package HTML_Javascript
-* @version 0.9
+* @version 1.0.0
 * @access public
 */
 
 /**
 * Invalid variable error
 *
-* @const HTML_JAVASCRIPT_ERROR_INVVAR
+* @const HTML_JAVASCRIPT_CONVERT_ERROR_INVVAR
 */
-define('HTML_JAVASCRIPT_ERROR_INVVAR', 502, true);
+define('HTML_JAVASCRIPT_CONVERT_ERROR_INVVAR', 502, true);
 
 require_once('PEAR.php');
 

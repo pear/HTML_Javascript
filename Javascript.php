@@ -14,9 +14,9 @@
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
 // | Authors: Tal Peer <tal@php.net>                                      |
-// |          Pierre-Alain Joye <paj@pearfr.org>                                                            |
+// |          Pierre-Alain Joye <paj@pearfr.org>                          |
 // +----------------------------------------------------------------------+
-
+// $Id $
 
 //Error codes
 
@@ -26,7 +26,14 @@
 * @const HTML_JAVASCRIPT_ERROR_NOSTART
 */
 define('HTML_JAVASCRIPT_ERROR_NOSTART', 500, true);
+
+/**
+* Unknown error
+*
+* @const HTML_JAVASCRIPT_ERROR_UNKOWN
+*/
 define('HTML_JAVASCRIPT_ERROR_UNKNOWN', 599, true);
+
 /**
 * Last script was not ended error
 *
@@ -58,7 +65,7 @@ require_once('HTML/Javascript/Convert.php');
 * @author Tal Peer <tal@php.net>
 * @author Pierre-Alain Joye <paj@pearfr.org>
 * @package HTML_Javascript
-* @version 0.9
+* @version 1.0.0
 * @access public
 */
 class HTML_Javascript extends PEAR

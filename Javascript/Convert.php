@@ -68,7 +68,15 @@ class HTML_Javascript_Convert extends PEAR
     */
     function escapeString($str)
     {
-        return addslashes($str);
+        $js_escape = array(
+            "\r" => '\r',
+            "\n" => '\n',
+            "\t" => '\t',
+            "'" => "\\'",
+            '\\' => '\\\\'
+        );
+
+        return strtr($str,$js_escape);
     }// }}} escapeString
 
 

@@ -15,89 +15,141 @@
 // | Authors:                                                             |
 // | Pierre-Alain Joye <paj@pearfr.org>                                   |
 // +----------------------------------------------------------------------+
-// $Id: HTML_Jacascript_Toolsbar.js,v 1.2 2003-05-12 22:38:19 pajoye Exp $
-function interrogate(what) {
-    var output = '';
-    for (var i in what){
-        output += i+ "\n";
-    }
-    alert(output);
-}
+// $Id: HTML_Jacascript_Toolsbar.js,v 1.3 2003-05-13 14:41:30 pajoye Exp $
+function HTML_Javascript_toolbar (name, elements, positions, options) {
+    var _toolbar = this;
 
-function HTMLJS_toolbar (buttonList, config) {
-    if( typeof buttonList=="undefined" ){
-        this.buttonList = new HTMLJS_toolbar.buttonList();
+    this.toolbar_elems = new Object();
+    this.name = name;
+
+    if(typeof options!="undefined"){
+        if(options["cssClass"]){
+            this.cssClass = options["cssClass"];
+        }
+        if(options["imgURL"]){
+            this._imgURL = options["imgURL"];
+        }
     } else {
-        this.buttonList = buttonList;
+        this.cssClass = "toolbar";
     }
+
+    if( typeof elements=="undefined" ){
+        this.element = new HTML_Javascript_toolbar.buttonList();
+    } else {
+        this.elements = elements;
+    }
+
+    if( typeof positions=="undefined" ){
+        this.positions = new HTML_Javascript_toolbar.buttonList();
+    } else {
+        this.positions = positions;
+    }
+    this._create();
 };
 
-HTMLJS_toolbar.client = browserDetect();
+HTML_Javascript_toolbar.prototype._imgURL = './images/';
 
-HTMLJS_toolbar.prototype._create = function () {
-    var editor = this;
-	var toolbar = document.createElement("div");
-	this._toolbar = toolbar;
-	toolbar.className = "toolbar";
+HTML_Javascript_toolbar.prototype._create = function (){
 
-	toolbar.unselectable = "1";
-//    toolbar.style.border = "1px solid red";
+    var _toolbar = this;
 
-	var _row = null;
-	var _objects = new Object();
-	this._toolbarObjects = _objects;
+    function newLine () {
+        var table = document.createElement("table");
+        table.border = "0px";
+        table.cellSpacing = "0px";
+        table.cellPadding = "0px";
+        toolbar.appendChild(table);
+        // IE runs in trouble without TBODY...
+        var _body = document.createElement("tbody");
+        table.appendChild(_body);
+        _row = document.createElement("tr");
+        _body.appendChild(_row);
+    }
 
-	function newLine() {
-		var table = document.createElement("table");
-		table.border = "0px";
-		table.cellSpacing = "0px";
-		table.cellPadding = "0px";
-		toolbar.appendChild(table);
-		// TBODY is required for IE, otherwise you don't see anything
-		// in the TABLE.
-		var _body = document.createElement("tbody");
-		table.appendChild(_body);
-		_row = document.createElement("tr");
-		_body.appendChild(_row);
-	};
+    // updates the state of a toolbar element
+    function setButtonStatus(id, newval) {
+        var oldval = this[id];
+        var el = this.element;
+        if (oldval != newval) {
+            switch (id) {
+                case "enabled":
+                    if (newval) {
+                        HTML_Javascript_toolbar._removeClass(el, "buttonDisabled");
+                        el.disabled = false;
+                    } else {
+                        HTML_Javascript_toolbar._addClass(el, "buttonDisabled");
+                        el.disabled = true;
+                    }
+                break;
+                case "active":
+                    if (newval) {
+                        HTML_Javascript_toolbar._addClass(el, "buttonPressed");
+                    } else {
+                        HTML_Javascript_toolbar._removeClass(el, "buttonPressed");
+                    }
+                break;
+            }
+            this[id] = newval;
+        }
+    };
 
-	function createButton(txt) {
-		// updates the state of a toolbar element
-		function setButtonStatus(id, newval) {
-			var oldval = this[id];
-			var el = this.element;
-			if (oldval != newval) {
-				switch (id) {
-				    case "enabled":
-                        if (newval) {
-                            HTMLJS_toolbar._removeClass(el, "buttonDisabled");
-                            el.disabled = false;
-                        } else {
-                            HTMLJS_toolbar._addClass(el, "buttonDisabled");
-                            el.disabled = true;
-                        }
-					break;
-				    case "active":
-                        if (newval) {
-                            HTMLJS_toolbar._addClass(el, "buttonPressed");
-                        } else {
-                            HTMLJS_toolbar._removeClass(el, "buttonPressed");
-                        }
-					break;
-				}
-				this[id] = newval;
-			}
-		};
-		// this function will handle creation of combo boxes
-		function createSelect() {
+    function createElement (name) {
+        function createText (elem){
+            el = document.createElement('div');
+            el.className = "button";
+            var c=elem['label'];
+            if(is_nav4){with(el.page){write(c||"");close()}}
+            if(is_ie && is_mac){c=c+"\n";}
+            el.innerHTML=c||"";
+            el.title = elem['label'];
+            return el;
+        }
+
+        function createImage (elem){
+            el = document.createElement('div');
+            el.className = "button";
+            var img = document.createElement("img");
+            img.src = _toolbar.imgURL(elem['image']);
+            el.appendChild(img);
+            return el;
+        }
+
+        function createSelect (elem){
+            var options = null;
+            options = elem['options'];
+			if (options) {
+                el = document.createElement("select");
+                for (var i in options) {
+                    var op = document.createElement("option");
+                    op.appendChild(document.createTextNode(options[i]));
+                    op.value = i;
+                    el.appendChild(op);
+                }
+                el.name = elem['name'];
+                txt = elem['name'];
+                if(false)
+				HTML_Javascript_toolbar._addEvent(el, "change", function () {
+                    interrogate(_toolbar.toolbar_elems[name]);
+                    alert(this.value);
+				});
+                if(typeof elem['onchange']=="function"){
+                    alert(elem['onchange']);
+                }
+                eval("el.evt_onchange = "+elem['onchange']);
+                HTML_Javascript_toolbar._addEvent(el, "change", function () {
+                    HTML_Javascript_toolbar.comboChage(el, name);
+                }
+                    );
+            }
+            return el;
 			var options = null;
 			var el = null;
 			var cmd = null;
-			switch (txt) {
+			switch (elem['name']) {
 			    case "fontsize":
 			    case "fontname":
 			    case "formatblock":
-                    //options = editor.config[txt]; // HACK ;)
+				options = editor.config[txt]; // HACK ;)
 				cmd = txt;
 				break;
 			}
@@ -109,150 +161,172 @@ HTMLJS_toolbar.prototype._create = function () {
 					enabled: true, // is it enabled?
 					text: false,   // enabled in text mode?
 					cmd: cmd,      // command ID
-					state: setButtonStatus // for changing state
+					state: setButtonStatus, // for changing state
+                    onclick: this.options["onclick"]
 				};
-				_objects[txt] = obj;
+				tb_objects[txt] = obj;
 				for (var i in options) {
 					var op = document.createElement("option");
 					op.appendChild(document.createTextNode(i));
 					op.value = options[i];
 					el.appendChild(op);
 				}
-				HTMLJS_toolbar._addEvent(el, "change", function () {
-                        editor._comboSelected(el, txt);
-                    }
-                );
+				HTML_Javascript_toolbar._addEvent(el, "change", function () {
+					editor._comboSelected(el, txt);
+
+				});
 			}
 			return el;
-		};
-		// the element that will be created
-		var el = null;
-		var btn = null;
+        }
 
-		switch (txt) {
-		    case "separator":
-                el = document.createElement("div");
-                el.className = "separator";
-			break;
-		    case "space":
-                el = document.createElement("div");
-                el.className = "space";
-			break;
-		    case "linebreak":
-                newLine();
-                return false;
-		    case "textindicator":
-                el = document.createElement("div");
-                el.appendChild(document.createTextNode("A"));
-                el.className = "indicator";
-                //  el.title = HTMLArea.I18N.tooltips.textindicator;
-                var obj = {
-                    name: txt,     // the button name (i.e. 'bold')
-                    element: el,   // the UI element (DIV)
-                    enabled: true, // is it enabled?
-                    active: false, // is it pressed?
-                    text: false,   // enabled in text mode?
-                    cmd: "textindicator", // the command ID
-                    state: setButtonStatus // for changing state
-                };
-                _objects[txt] = obj;
-			break;
-		    default:
-                btn = editor.buttonList.data[txt];
-			break;
-		}
-		if (!el && btn) {
-			el = document.createElement("div");
-			el.title = btn[1];
-			el.className = "button";
-			// let's just pretend we have a button object, and
-			// assign all the needed information to it.
-			var obj = {
-				name: txt,     // the button name (i.e. 'bold')
-				element: el,   // the UI element (DIV)
-				enabled: true, // is it enabled?
-				active: false, // is it pressed?
-				text: btn[3],  // enabled in text mode?
-				cmd: btn[0],   // the command ID
-				state: setButtonStatus // for changing state
-			};
-			_objects[txt] = obj;
+        function createRadio (elem){
+            alert(elem['type']);
+        }
 
-			// handlers to emulate nice flat toolbar buttons
-			HTMLJS_toolbar._addEvent(el, "mouseover", function () {
-				if (obj.enabled) {
-					HTMLJS_toolbar._addClass(el, "buttonHover");
-				}
-			});
-			HTMLJS_toolbar._addEvent(el, "mouseout", function () {
-				if (obj.enabled) with (HTMLJS_toolbar) {
-					_removeClass(el, "buttonHover");
-					_removeClass(el, "buttonActive");
-					(obj.active) && _addClass(el, "buttonPressed");
-				}
-			});
-			HTMLJS_toolbar._addEvent(el, "mousedown", function (ev) {
-				if (obj.enabled) with (HTMLJS_toolbar) {
-					_addClass(el, "buttonActive");
-					_removeClass(el, "buttonPressed");
-					_stopEvent(client.ie ? window.event : ev);
-				}
-			});
-			// when clicked, do the following:
-			HTMLJS_toolbar._addEvent(el, "click", function (ev) {
-				if (obj.enabled) with (HTMLJS_toolbar) {
-					_removeClass(el, "buttonActive");
-					_removeClass(el, "buttonHover");
-					editor._buttonClicked(txt);
-					_stopEvent(client.ie ? window.event : ev);
-				}
-			});
+        function createCheckbox (elem){
+            alert(elem['type']);
+        }
 
-            if(txt=='bold'){
-                var c="<b>Bold and GO AHEAD</b>";
-                if(Client.ns4){with(el.page){write(c||"");close()}}
-                if(Client.ie&&Client.userAgent.indexOf("Mac")>0){c=c+"\n";}
-                el.innerHTML=c||"";
-            } else {
-                var img = document.createElement("img");
-                img.src = editor.imgURL(btn[2]);
-                el.appendChild(img);
+        function createSeparator(){
+            el = document.createElement('div');
+            el.className = "separator";
+        }
+
+        function createSpace(){
+            el = document.createElement('div');
+            el.className = "space";
+        }
+
+        var el = null;
+        allowevent = false;
+        if(name=='separator'){
+            createSeparator();
+        } else if ( name=='newline') {
+            newLine();
+            return false;
+        } else if ( name=='space') {
+			createSpace();
+        } else {
+            elem = _toolbar.elements[name];
+            type = elem['type'];
+            switch(type){
+                case "text":
+                    allowevent = true;
+                    el = createText(elem);
+                break;
+                case "image":
+                    allowevent = true;
+                    el = createImage(elem);
+                break;
+                case "select":
+                    el = createSelect(elem);
+                break;
+                default:
+                    allowevent = false;
+                break;
             }
-		} else if (!el) {
-			el = createSelect();
-		}
-		if (el) {
+        }
+
+        var _cell = document.createElement("td");
+
+		if ( el ) {
+            el.name = name;
+            var obj = {
+                name: name,             // the button name (i.e. 'bold')
+                element: el,            // the UI element (DIV)
+                enabled: true,          // is it enabled?
+                active: false,          // is it pressed?
+                text: elem['label'],    // enabled in text mode?
+                cmd: elem['callback'],  // the command ID
+                state: setButtonStatus, // for changing state
+            }
+            //alert(this.onclick);
+            _toolbar.toolbar_elems[name] = obj;
+
 			var _cell = document.createElement("td");
 			_row.appendChild(_cell);
 			_cell.appendChild(el);
+            if(allowevent){
+                if(elem["onclick"]){
+                    obj.onclick=elem["onclick"];
+                }
+                if(elem["onmouseover"]){
+                    obj.onmouseover=elem["onmouseover"];
+                }
+                if(elem["onmouseout"]){
+                    obj.onmouseover=elem["onmouseout"];
+                }
+                if(elem["onmousedown"]){
+                    obj.onmouseover=elem["onmousedown"];
+                }
+                // Let define the events
+                HTML_Javascript_toolbar._addEvent(el, "mouseover", function () {
+                    if (obj.enabled) {
+                        HTML_Javascript_toolbar._addClass(el, "buttonHover");
+                        if(obj.onmouseover)
+                            eval(obj.onmouseover+"(obj)");
+                    }
+                });
+                HTML_Javascript_toolbar._addEvent(el, "mouseout", function () {
+                    if (obj.enabled) with (HTML_Javascript_toolbar) {
+                        _removeClass(el, "buttonHover");
+                        _removeClass(el, "buttonActive");
+                        (obj.active) && _addClass(el, "buttonPressed");
+                    }
+                });
+                HTML_Javascript_toolbar._addEvent(el, "mousedown", function (ev) {
+                    if (obj.enabled) with (HTML_Javascript_toolbar) {
+                        _addClass(el, "buttonActive");
+                        _removeClass(el, "buttonPressed");
+                        _stopEvent(is_ie ? window.event : ev);
+                    }
+                });
+                // when clicked, do the following:
+                HTML_Javascript_toolbar._addEvent(el, "click", function (ev) {
+                    if (obj.enabled) with (HTML_Javascript_toolbar) {
+                        _removeClass(el, "buttonActive");
+                        _removeClass(el, "buttonHover");
+                        if(obj.onclick)
+                            eval(obj.onclick+"(obj)");
+                        _stopEvent(is_ie ? window.event : ev);
+                    }
+                });
+            }
 		} else {
-			//alert("FIXME: Unknown toolbar item: " + txt);
-		}
-		return el;
-	};
-	// init first line
-	newLine();
+            alert('HTML_Javascript Error: Error with the element: '+elem['name']);
+        }
+    }
 
-    for (var i in HTMLJS_toolbar.toolbar) {
-		var group = HTMLJS_toolbar.toolbar[i];
-		for (var j in group) {
-			createButton(group[j]);
-		}
-	}
+    var toolbar = document.createElement("div");
+    toolbar.className = this.cssClass;
+    toolbar.unselectable = "1";
 
-	var tas = document.getElementsByTagName("div");
-	var htmlarea = document.createElement("div");
-	htmlarea.className = "htmlarea";
-    htmlarea.className = "htmlarea";
-	//for (var i = tas.length; i > 0; (new HTMLArea(tas[--i])).generate());
-	htmlarea.appendChild(toolbar);
-    ///tas[0].className = "textarea";
-    //alert(tas[0].innerHTML);
-    tas[0].appendChild(htmlarea);
+    newLine();
+
+    // here we go
+    for (var i in this.positions) {
+		var name = this.positions[i];
+        if(name!="separator" && name!="newline" && name!="space" && typeof this.elements[name]=="undefined"){
+            alert("Error "+name+" element not found in elements list.");
+        } else {
+            createElement(name);
+        }
+    }
+
+    // Get the element named this.name and append the toolbar to it
+    var tas = document.getElementById(this.name);
+    tas.appendChild(toolbar);
 }
 
+HTML_Javascript_toolbar.prototype.getElement = function (name){
+    return this.toolbar_elems[name];
+}
 
-HTMLJS_toolbar._removeClass = function(el, className) {
+HTML_Javascript_toolbar.prototype.imgURL = function(file) {
+	return this._imgURL + file;
+};
+
+HTML_Javascript_toolbar._removeClass = function(el, className) {
 	if (!(el && el.className)) {
 		return;
 	}
@@ -266,13 +340,13 @@ HTMLJS_toolbar._removeClass = function(el, className) {
 	el.className = ar.join(" ");
 };
 
-HTMLJS_toolbar._addClass = function(el, className) {
+HTML_Javascript_toolbar._addClass = function(el, className) {
 	// remove the class first, if already there
-	HTMLJS_toolbar._removeClass(el, className);
+	HTML_Javascript_toolbar._removeClass(el, className);
 	el.className += " " + className;
 };
 
-HTMLJS_toolbar._hasClass = function(el, className) {
+HTML_Javascript_toolbar._hasClass = function(el, className) {
 	if (!(el && el.className)) {
 		return false;
 	}
@@ -285,39 +359,41 @@ HTMLJS_toolbar._hasClass = function(el, className) {
 	return false;
 };
 
-
-
 // event handling
-HTMLJS_toolbar._addEvent = function(el, evname, func) {
-	if (HTMLJS_toolbar.client.ie) {
+HTML_Javascript_toolbar._addEvent = function(el, evname, func) {
+	if (is_ie) {
 		el.attachEvent("on" + evname, func);
 	} else {
 		el.addEventListener(evname, func, true);
 	}
 };
 
-HTMLJS_toolbar._addEvents = function(el, evs, func) {
+HTML_Javascript_toolbar._addEvents = function(el, evs, func) {
 	for (var i in evs) {
-		HTMLJS_toolbar._addEvent(el, evs[i], func);
+		HTML_Javascript_toolbar._addEvent(el, evs[i], func);
 	}
 };
 
-HTMLJS_toolbar._removeEvent = function(el, evname, func) {
-	if (HTMLJS_toolbar.client.ie) {
+HTML_Javascript_toolbar._removeEvent = function(el, evname, func) {
+	if (is_ie) {
 		el.detachEvent("on" + evname, func);
 	} else {
 		el.removeEventListener(evname, func, true);
 	}
 };
 
-HTMLJS_toolbar._removeEvents = function(el, evs, func) {
+HTML_Javascript_toolbar._removeEvents = function(el, evs, func) {
 	for (var i in evs) {
-		HTMLJS_toolbar._removeEvent(el, evs[i], func);
+		HTML_Javascript_toolbar._removeEvent(el, evs[i], func);
 	}
 };
 
-HTMLJS_toolbar._stopEvent = function(ev) {
-	if (HTMLJS_toolbar.client.ie) {
+HTML_Javascript_toolbar.comboChage = function (el, txt){
+    el.evt_onchange(el, txt);
+}
+
+HTML_Javascript_toolbar._stopEvent = function(ev) {
+	if (is_ie) {
 		ev.cancelBubble = true;
 		ev.returnValue = false;
 	} else {
@@ -326,81 +402,3 @@ HTMLJS_toolbar._stopEvent = function(ev) {
 	}
 };
 
-// paths
-
-HTMLJS_toolbar.prototype.imgURL = function(file) {
-    //interrogate(this.buttonList);
-    //alert(this.imgURL + file);
-	return this.buttonList.imgURL + file;
-};
-
-HTMLJS_toolbar.prototype.popupURL = function(file) {
-	return this.buttonList.popupURL + file;
-};
-
-
-HTMLJS_toolbar.prototype._buttonClicked = function(txt) {
-    btn = this.buttonList.data[txt];
-    var cmd=btn[0];
-    switch(cmd.toLowerCase()){
-    case 'bold':
-            alert("Bold selected");
-        break;
-    }
-    return;
-	var editor = this;	// needed in nested functions
-	this.focusEditor();
-	var btn = this.config.btnList[txt];
-	if (!btn) {
-		alert("FIXME: Unconfigured button!");
-		return false;
-	}
-	var cmd = btn[0];
-	if (typeof cmd == "function") {
-		return cmd(this, txt);
-	}
-	switch (cmd.toLowerCase()) {
-	    case "htmlmode":
-		this.setMode(this._mode != "textmode" ? "textmode" : "wysiwyg");
-		break;
-	    case "forecolor":
-	    case "backcolor":
-		this._popupDialog("select_color.html", function(color) {
-			editor._execCommand(cmd, false, "#" + color);
-		}, HTMLJS_toolbar._colorToRgb(this._doc.queryCommandValue(btn[0])));
-		break;
-	    case "createlink":
-		this._execCommand(cmd, true);
-		break;
-	    case "insertimage":
-		this._insertImage();
-		break;
-	    case "inserttable":
-		this._insertTable();
-		break;
-	    case "popupeditor":
-		if (HTMLJS_toolbar.client.ie) {
-			window.open(this.popupURL("fullscreen.html"), "ha_fullscreen",
-				    "toolbar=no,location=no,directories=no,status=yes,menubar=no," +
-				    "scrollbars=no,resizable=yes,width=640,height=480");
-		} else {
-			window.open(this.popupURL("fullscreen.html"), "ha_fullscreen",
-				    "toolbar=no,menubar=no,personalbar=no,width=640,height=480," +
-				    "scrollbars=no,resizable=yes");
-		}
-		// pass this object to the newly opened window
-		HTMLJS_toolbar._object = this;
-		break;
-	    case "about":
-		this._popupDialog("about.html", null, null);
-		break;
-	    case "help":
-		alert("Help not implemented");
-		break;
-	    default:
-		this._execCommand(btn[0], false, "");
-		break;
-	}
-	this.updateToolbar();
-	return false;
-};

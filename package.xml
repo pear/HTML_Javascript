@@ -28,9 +28,9 @@
   </maintainers>
 
   <release>
-    <version>1.x.x</version>
+    <version>1.2.0</version>
     <date>2003-xx-xx</date>
-    <state>stable</state>
+    <state>alpha</state>
     <license>PHP 3.0</license>
     <notes>
         * Licence changed to PHP Licence 3.0

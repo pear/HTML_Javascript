@@ -308,7 +308,7 @@ class HTML_Javascript_Convert
             }
             return $var;
         } else {
-            require_once 'HTML/Javasript.php';
+            require_once 'HTML/Javascript.php';
             return HTML_Javascript::raiseError(
                         HTML_JAVASCRIPT_ERROR_INVVAR
                     );

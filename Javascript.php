@@ -1,4 +1,5 @@
 <?php
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -33,9 +34,8 @@ define('HTML_JAVASCRIPT_ERROR_NOSTART', 500, true);
 */
 define('HTML_JAVASCRIPT_ERROR_NOEND', 501, true);
 
-
-
 require_once('PEAR.php');
+require_once('HTML/Javascript/Convert.php');
 
 /**
 * A class for performing basic JavaScript operations
@@ -70,7 +70,8 @@ class HTML_Javascript extends PEAR
     * @access private
     */
     var $_started = false;
-    
+
+    // {{{ HTML_Javascript
     /**
     * Constructor - creates a new HTML_Javascript object
     *
@@ -79,24 +80,10 @@ class HTML_Javascript extends PEAR
     function HTML_Javascript()
     {
         $this->PEAR();
-    }
+    }// }}} HTML_Javascript
 
-    /**
-    * Used to end the script (</script>)
-    *
-    * @return mixed PEAR_Error if no script has been started or the end tag for the script
-    * @access public
-    */
-    function endScript()
-    {
-        if ($this->_started) {
-            $this->_started = false;
-            return "</script>\n";
-        } else {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
-        }
-    }
 
+    // {{{ raiseError
     /**
     * A custom error handler
     *
@@ -121,8 +108,10 @@ class HTML_Javascript extends PEAR
         }
 
         return $ret;
-    }
+    }// }}} raiseError
 
+
+    // {{{ startScript
     /**
     * Starts a new script
     *
@@ -131,14 +120,30 @@ class HTML_Javascript extends PEAR
     */
     function startScript()
     {
-        if ($this->_started) {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOEND);
-        } else {
-            $this->_started = true;
-            return "<script language=\"javascript\">\n";
-        }
-    }
+        $this->_started = true;
+        return "<script language=\"javascript\">\n";
+    } // }}} startScript
 
+
+    // {{{ endScript
+    /**
+    * Used to end the script (</script>)
+    *
+    * @return mixed PEAR_Error if no script has been started or the end tag for the script
+    * @access public
+    */
+    function endScript()
+    {
+        if ($this->_started) {
+            $this->_started = false;
+            return "</script>\n";
+        } else {
+            return HTML_Javascript::raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
+        }
+    } // }}} endScript
+
+
+    // {{{ write
     /**
     * A wrapper for document.writeln
     *
@@ -149,17 +154,15 @@ class HTML_Javascript extends PEAR
     */
     function write($str, $var = false)
     {
-        if ($this->_started) {
-            if ($var) {
-                return 'document.writeln('.$str.')'."\n";
-            } else {
-                return 'document.writeln("'.$str.'")'."\n";
-            }
+        if ($var) {
+            return 'document.writeln('.$str.')'."\n";
         } else {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
+            return 'document.writeln("'.HTML_Javascript_Convert::escapeString($str).'")'."\n";
         }
-    }
+    }// }}} write
 
+
+    // {{{ writeLine
     /**
     * A wrapper for document.writeln with an addtional <br /> tag
     *
@@ -170,17 +173,15 @@ class HTML_Javascript extends PEAR
     */
     function writeLine($str, $var = false)
     {
-        if ($this->_started) {
-            if ($var) {
-                return 'document.writeln('.$str.'+"<br />")'."\n";
-            } else {
-                return 'document.writeln("'.$str.'"+"<br />")'."\n";
-            }
+        if ($var) {
+            return 'document.writeln('.$str.'+"<br />")'."\n";
         } else {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
+            return 'document.writeln("'.HTML_Javascript_Convert::escapeString($str).'"+"<br />")'."\n";
         }
-    }
+    }// }}} writeLine
 
+
+    // {{{ alert
     /**
     * A wrapper for alert
     *
@@ -191,17 +192,13 @@ class HTML_Javascript extends PEAR
     */
     function alert($str, $var = false)
     {
-        if ($this->_started) {
-            if ($var) {
-                return 'alert('.$str.')'."\n";
-            } else {
-                return 'alert("'.$str.'")'."\n";
-            }
-        } else {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
-        }
-    }
+        $alert  = 'alert(';
+        $alert  .= $var?$str:'"' . HTML_Javascript_Convert::escapeString($str) . '"';
+        return $alert.')'."\n";
+    } // {{{ alert
 
+
+    // {{{ prompt
     /**
     * Opens a propmt (input box)
     *
@@ -212,14 +209,12 @@ class HTML_Javascript extends PEAR
     */
     function prompt($str, $assign, $var = false)
     {
-        if ($this->_started) {
-            if ($var) {
-                return $assign.'=prompt('.$str.')'."\n";
-            } else {
-                return $assign.'=prompt("'.$str.'")'."\n";
-            }
+        if ($var) {
+            $prompt = 'prompt('.$str.')'."\n";
         } else {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
+
+            $prompt = 'prompt("'.HTML_Javascript_Convert::escapeString($str).'")'."\n";
         }
-    }
+        return $assign .' = ' . $prompt;
+    }// }}} prompt
 }

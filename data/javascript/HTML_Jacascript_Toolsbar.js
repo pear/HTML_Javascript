@@ -1,10 +1,21 @@
-//
-//
-//
-//
-//
-//
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
+// +----------------------------------------------------------------------+
+// | PHP Version 4                                                        |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 1997-2003 The PHP Group                                |
+// +----------------------------------------------------------------------+
+// | This source file is subject to version 3.0 of the PHP license,       |
+// | that is bundled with this package in the file LICENSE, and is        |
+// | available at through the world-wide-web at                           |
+// | http://www.php.net/license/3_0.txt                                   |
+// | If you did not receive a copy of the PHP license and are unable to   |
+// | obtain it through the world-wide-web, please send a note to          |
+// | license@php.net so we can mail you a copy immediately.               |
+// +----------------------------------------------------------------------+
+// | Authors:                                                             |
+// | Pierre-Alain Joye <paj@pearfr.org>                                   |
+// +----------------------------------------------------------------------+
+// $Id: HTML_Jacascript_Toolsbar.js,v 1.2 2003-05-12 22:38:19 pajoye Exp $
 function interrogate(what) {
     var output = '';
     for (var i in what){
@@ -22,50 +33,6 @@ function HTMLJS_toolbar (buttonList, config) {
 };
 
 HTMLJS_toolbar.client = browserDetect();
-
-HTMLJS_toolbar.toolbar = [
-        [ "fontname", "space" ],
-        [ "fontsize", "space" ],
-        [ "formatblock", "space"],
-        [ "bold", "italic", "underline", "separator" ],
-        [ "strikethrough", "subscript", "superscript", "linebreak" ],
-        [ "justifyleft", "justifycenter", "justifyright", "justifyfull", "separator" ],
-        [ "orderedlist", "unorderedlist", "outdent", "indent", "separator" ],
-        [ "forecolor", "backcolor", "textindicator", "separator" ],
-        [ "horizontalrule", "createlink", "insertimage", "inserttable", "htmlmode", "separator" ],
-        [ "popupeditor", "about" ]
-    ];
-
-HTMLJS_toolbar.buttonList =function (){
-    this.imgURL = "images/";
-    this.popupURL = "";
-    this.data ={
-        bold:           ["Bold",                 "Bold",               "ed_format_bold.gif",       false],
-		italic:         ["Italic",               "Italic",             "ed_format_italic.gif",     false],
-		underline:      ["Underline",            "Underline",          "ed_format_underline.gif",  false],
-		strikethrough:  ["StrikeThrough",        "Strikethrough",      "ed_format_strike.gif",     false],
-		subscript:      ["SubScript",            "Subscript",          "ed_format_sub.gif",        false],
-		superscript:    ["SuperScript",          "Superscript",        "ed_format_sup.gif",        false],
-		justifyleft:    ["JustifyLeft",          "Justify Left",       "ed_align_left.gif",        false],
-		justifycenter:  ["JustifyCenter",        "Justify Center",     "ed_align_center.gif",      false],
-		justifyright:   ["JustifyRight",         "Justify Right",      "ed_align_right.gif",       false],
-		justifyfull:    ["JustifyFull",          "Justify Full",       "ed_align_justify.gif",     false],
-		orderedlist:    ["InsertOrderedList",    "Ordered List",       "ed_list_num.gif",          false],
-		unorderedlist:  ["InsertUnorderedList",  "Bulleted List",      "ed_list_bullet.gif",       false],
-		outdent:        ["Outdent",              "Decrease Indent",    "ed_indent_less.gif",       false],
-		indent:         ["Indent",               "Increase Indent",    "ed_indent_more.gif",       false],
-		forecolor:      ["ForeColor",            "Font Color",         "ed_color_fg.gif",          false],
-		backcolor:      ["BackColor",            "Background Color",   "ed_color_bg.gif",          false],
-		horizontalrule: ["InsertHorizontalRule", "Horizontal Rule",    "ed_hr.gif",                false],
-		createlink:     ["CreateLink",           "Insert Web Link",    "ed_link.gif",              false],
-		insertimage:    ["InsertImage",          "Insert Image",       "ed_image.gif",             false],
-		inserttable:    ["InsertTable",          "Insert Table",       "insert_table.gif",         false],
-		htmlmode:       ["HtmlMode",             "Toggle HTML Source", "ed_html.gif",              true],
-		popupeditor:    ["popupeditor",          "Enlarge Editor",     "fullscreen_maximize.gif",  true],
-		about:          ["about",                "About this editor",  "ed_about.gif",             true],
-		help:           ["showhelp",             "Help using editor",  "ed_help.gif",              true]
-    }
-};
 
 HTMLJS_toolbar.prototype._create = function () {
     var editor = this;

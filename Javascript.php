@@ -17,6 +17,10 @@
 // +----------------------------------------------------------------------+
 
 
+//Error codes
+define('HTML_JAVASCRIPT_ERROR_NOSTART', 500, true);
+define('HTML_JAVASCRIPT_ERROR_NOEND', 501, true);
+define('HTML_JAVASCRIPT_ERROR_INVVAR', 502, true);
 
 require_once('PEAR.php');
 
@@ -61,6 +65,7 @@ class HTML_Javascript extends PEAR
     {
         $this->PEAR();
     }
+
     
     /**
     * Used to end the script (</script>)
@@ -74,7 +79,7 @@ class HTML_Javascript extends PEAR
             $this->_started = false;
             return "</script>\n";
         } else {
-            return $this->raiseError('No script started');
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
         }
     }
     
@@ -110,7 +115,7 @@ class HTML_Javascript extends PEAR
     function convertString($str, $varname, $global = false)
     {
         if (!$this->_started) {
-            return $this->raiseError('No script started');
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_);
         }
         
         $var = '';
@@ -125,10 +130,10 @@ class HTML_Javascript extends PEAR
     
     /**
     * Converts  a PHP variable into a JS variable
-    * Note: you can safely provide strings or arrays as arguments for this function
+    * Note: you can safely provide strings, arrays or booleans as arguments for this function
     *
     * @access public
-    * @param  string  $var     the variable to convert
+    * @param  mixed   $var     the variable to convert
     * @param  string  $varname the variable name to declare
     * @param  boolean $global  if true, the JS var will be global
     * @return mixed   a PEAR_Error if no script was started or the converted variable
@@ -136,10 +141,10 @@ class HTML_Javascript extends PEAR
     function convertVar($var, $varname, $global = false)
     {
         if (!$this->_started) {
-            return $this->raiseError('No script started');
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_);
         }
         
-        if (!(is_string($var) || is_array($var))) {
+        if (!(is_string($var) OR is_array($var) OR is_bool($var))) {
             $ret = '';
             if ($global) {
                 $ret = 'var ';
@@ -152,10 +157,66 @@ class HTML_Javascript extends PEAR
                 return $this->convertArray($var, $varname, $global);
             } elseif (is_string($var)) {
                 return $this->convertString($var, $varname, $global);
+            } elseif (is_bool($var)) {
+                return $this->convertBoolean($var, $varname, $global);
             } else {
-                $this->raiseError('Invalid variable');
+                $this->raiseError(HTML_JAVASCRIPT_ERROR_INVVAR);
             }
         }
+    }
+    
+    /**
+    * A custom error handler
+    *
+    * @access public
+    * @param  integer $code the error code
+    * @return mixed   false if the error code is invalid, or a PEAR_Error otherwise
+    */
+    function raiseError($code)
+    {
+        switch ($code) {
+            case HTML_JAVASCRIPT_ERROR_NOSTART:
+                PEAR::raiseError('No script started', HTML_JAVASCRIPT_ERROR_NOSTART);
+                break;
+            case HTML_JAVASCRIPT_ERROR_NOEND:
+                PEAR::raiseError('Last script was not ended', HTML_JAVASCRIPT_ERROR_NOEND);
+                break;
+            case HTML_JAVASCRIPT_ERROR_INVVAR:
+                PEAR::raiseError('Invalid variable', HTML_JAVASCRIPT_ERROR_INVVAR);
+                break;
+            default:
+                return false;
+                break;
+        }
+    }
+
+    /**
+    * Converts a PHP boolean variable into a JS boolean variable
+    *
+    * @access public
+    * @param  boolean $bool    the boolean variable
+    * @param  string  $varname the variable name to declare
+    * @param  boolean $global  set to true to make the JS variable global
+    * @return mixed   a PEAR_Error on error or a string  with the declaration
+    */
+    function convertBoolean($bool, $varname, $global = false)
+    {
+        if (!$this->_started) {
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_);
+        }
+        
+        $var = '';
+        if($global) {
+            $var = 'var ';
+        }
+        
+        $var .= $varname.' = ';
+        if ($bool) {
+            $var .= 'true';
+        } else {
+            $var .= 'false';
+        }
+        return $var."\n";
     }
     
     /**
@@ -167,7 +228,7 @@ class HTML_Javascript extends PEAR
     function startScript()
     {
         if ($this->_started) {
-            return $this->raiseError('Script already started');
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOEND);
         } else {
             $this->_started = true;
             return "<script language=\"javascript\">\n";
@@ -187,7 +248,7 @@ class HTML_Javascript extends PEAR
     function convertArray($arr, $varname, $global = false)
     {
         if (!$this->_started) {
-            return $this->raiseError('No script started');
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_);
         }
         
         $var = '';
@@ -230,7 +291,7 @@ class HTML_Javascript extends PEAR
                 return 'document.writeln("'.$str.'")'."\n";
             }
         } else {
-            return $this->raiseError('No script started');
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
         }
     }
     
@@ -251,7 +312,7 @@ class HTML_Javascript extends PEAR
                 return 'document.writeln("'.$str.'"+"<br />")'."\n";
             }
         } else {
-            return $this->raiseError('No script started');
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
         }
     }
     
@@ -272,7 +333,7 @@ class HTML_Javascript extends PEAR
                 return 'alert("'.$str.'")'."\n";
             }
         } else {
-            return $this->raiseError('No script started');
+            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
         }
     }
 }

@@ -1,4 +1,21 @@
 <?php
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
+/**
+* A class for converting PHP variables into JavaScript variables
+*
+* Usage example:
+*
+* $js = new HTML_Javascript_Convert()
+* $a = array('foo','bar','buz',1,2,3);
+* $b = $js->convertArray($a, 'arr', true);
+* or
+* echo HTML_Javascript_Convert::convertArray($a);
+*
+* @author Tal Peer <tal@php.net>
+* @package HTML_Javascript
+* @version 0.9
+* @access public
+*/
 
 /**
 * Invalid variable error
@@ -9,25 +26,9 @@ define('HTML_JAVASCRIPT_ERROR_INVVAR', 502, true);
 
 require_once('PEAR.php');
 
-/**
-* A class for converting PHP variables into JavaScript variables
-*
-* Usage example:
-*
-* $js = new HTML_Javascript_Convert()
-* $a = array('foo','bar','buz',1,2,3);
-* $b = $js->convertArray($a, 'arr', true);
-*
-* TODO:
-* -Add support for multidimensional arrays in convertArray()
-*
-* @author Tal Peer <tal@php.net>
-* @package HTML_Javascript
-* @version 0.9
-* @access public
-*/
 class HTML_Javascript_Convert extends PEAR
 {
+    // {{{ HTML_Javscript_Convert
     /**
     * Constructor - creates a new HTML_Javascript_Convert object
     *
@@ -35,8 +36,10 @@ class HTML_Javascript_Convert extends PEAR
     function HTML_Javscript_Convert()
     {
         $this->PEAR();
-    }
+    }// }}} HTML_Javscript_Convert
 
+
+    // {{{ escapeString
     /**
     * Used to terminate escape characters in strings, as javascript doesn't allow them
     *
@@ -46,17 +49,81 @@ class HTML_Javascript_Convert extends PEAR
     */
     function escapeString($str)
     {
-        $js_escape = array(
-            "\r" => '\r',
-            "\n" => '\n',
-            "\t" => '\t',
-            "'" => "\\'",
-            '\\' => '\\\\'
-        );
+        return addslashes($str);
+    }// }}} escapeString
 
-        return strtr($str,$js_escape);
-    }
 
+    // {{{ convertVar
+    /**
+    * Converts  a PHP variable into a JS variable
+    * you can safely provide strings, arrays or booleans as arguments for this function
+    *
+    * @access public
+    * @param  mixed   $var     the variable to convert
+    * @param  string  $varname the variable name to declare
+    * @param  boolean $global  if true, the JS var will be global
+    * @return mixed   a PEAR_Error if no script was started or the converted variable
+    */
+    function convertVar($var, $varname, $global = false)
+    {
+        $var_type    = gettype($var);
+        switch ( $var_type ) {
+            case 'boolean':
+                return HTML_Javascript_Convert::convertBoolean($var, $varname, $global);
+                break;
+            case 'integer':
+                $ret = '';
+                if ($global) {
+                    $ret = 'var ';
+                }
+                $ret .= $varname.' = '.$var;
+                return $ret."\n";
+                break;
+            case 'double':
+                $ret = '';
+                if ($global) {
+                    $ret = 'var ';
+                }
+                $ret .= $varname.' = '.$var;
+                return $ret."\n";
+                break;
+            case 'string':
+                return HTML_Javascript_Convert::convertString($var, $varname, $global);
+                break;
+            case 'array':
+                return HTML_Javascript_Convert::convertArray($var, $varname, $global);
+                break;
+            default:
+                return HTML_Javascript_Convert::raiseError('Unsupported variable type', HTML_JAVASCRIPT_ERROR_INVVAR );
+                break;
+        }
+    }// }}} convertVar
+
+
+    // {{{ raiseError
+    /**
+    * A custom error handler
+    *
+    * @access public
+    * @param  integer $code the error code
+    * @return mixed   false if the error code is invalid, or a PEAR_Error otherwise
+    */
+    function raiseError($code)
+    {
+        $ret = null;
+        switch ($code) {
+            case HTML_JAVASCRIPT_ERROR_INVVAR:
+                $ret = PEAR::raiseError('Invalid variable', HTML_JAVASCRIPT_ERROR_INVVAR);
+                break;
+            default:
+                $ret = PEAR::raiseError('Unknown Error', HTML_JAVASCRIPT_ERROR_INVVAR);
+                break;
+        }
+        return $ret;
+    }// }}} raiseError
+
+
+    // {{{ convertString
     /**
     * Converts  a PHP string into a JS string
     *
@@ -68,80 +135,17 @@ class HTML_Javascript_Convert extends PEAR
     */
     function convertString($str, $varname, $global = false)
     {
-        if (!$this->_started) {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
-        }
-
         $var = '';
-        $str = $this->escapeString($str);
         if($global) {
             $var = 'var ';
         }
-
+        $str = HTML_Javascript_Convert::escapeString($str);
         $var .= $varname.' = "'.$str.'"';
         return $var."\n";
-    }
-    
-    /**
-    * Converts  a PHP variable into a JS variable
-    * Note: you can safely provide strings, arrays or booleans as arguments for this function
-    *
-    * @access public
-    * @param  mixed   $var     the variable to convert
-    * @param  string  $varname the variable name to declare
-    * @param  boolean $global  if true, the JS var will be global
-    * @return mixed   a PEAR_Error if no script was started or the converted variable
-    */
-    function convertVar($var, $varname, $global = false)
-    {
-        if (!$this->_started) {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
-        }
+    }// }}} convertString
 
-        if (!(is_string($var) OR is_array($var) OR is_bool($var))) {
-            $ret = '';
-            if ($global) {
-                $ret = 'var ';
-            }
 
-            $ret .= $varname.' = '.$var;
-            return $ret."\n";
-        } else {
-            if (is_array($var)) {
-                return $this->convertArray($var, $varname, $global);
-            } elseif (is_string($var)) {
-                return $this->convertString($var, $varname, $global);
-            } elseif (is_bool($var)) {
-                return $this->convertBoolean($var, $varname, $global);
-            } else {
-                $this->raiseError(HTML_JAVASCRIPT_ERROR_INVVAR);
-            }
-        }
-    }
-    
-    /**
-    * A custom error handler
-    *
-    * @access public
-    * @param  integer $code the error code
-    * @return mixed   false if the error code is invalid, or a PEAR_Error otherwise
-    */
-    function raiseError($code)
-    {
-        $ret = null;
-
-        switch ($code) {
-            case HTML_JAVASCRIPT_ERROR_INVVAR:
-                $ret = PEAR::raiseError('Invalid variable', HTML_JAVASCRIPT_ERROR_INVVAR);
-                break;
-            default:
-                $ret = false;
-                break;
-        }
-
-        return $ret;
-    }
-    
+    // {{{ convertBoolean
     /**
     * Converts a PHP boolean variable into a JS boolean variable
     *
@@ -153,60 +157,52 @@ class HTML_Javascript_Convert extends PEAR
     */
     function convertBoolean($bool, $varname, $global = false)
     {
-        if (!$this->_started) {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
-        }
-
         $var = '';
         if($global) {
             $var = 'var ';
         }
-
-        $var .= $varname.' = ';
-        if ($bool) {
-            $var .= 'true';
-        } else {
-            $var .= 'false';
-        }
+        $var    .= $varname.' = ';
+        $var    .= $bool?'true':'false';
         return $var."\n";
-    }
+    }// }}} convertBoolean
 
+
+    // {{{ convertArray()
     /**
-    * Converts  a PHP array into a JS array
-    * Note: support for multi-dimensional arrays is not yet implemented, DO NOT use them
+    * Converts  a PHP array into a JS array, supports of multu-dimensional array.
+    * Keeps keys as they are (associative arrays).
     *
     * @access public
     * @param  string  $arr     the array to convert
     * @param  string  $varname the variable name to declare
     * @param  boolean $global  if true, the JS var will be global
+    * @param  int     $level   Not public, used for recursive calls
     * @return mixed   a PEAR_Error if no script was started or the converted array
     */
-    function convertArray($arr, $varname, $global = false)
+    function convertArray($arr, $varname, $global = false, $level=0)
     {
-        if (!$this->_started) {
-            return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOSTART);
-        }
-
         $var = '';
         if ($global) {
             $var = 'var ';
         }
-
-        $var .= $varname.' = Array(';
-        foreach ($arr as $key => $cell) {
-            if ($key != 0) {
-                $var .= ',';
+        if ( is_array($arr) ){
+            $length = sizeof($arr);
+            $var    .= $varname . ' = Array('. $length .")\n";
+            foreach ( $arr as $key=>$cell ){
+                $jskey  = is_int($key)?$key:'"' . $key . '"';
+                if ( is_array( $cell ) ){
+                    $level++;
+                    $var    .= HTML_Javascript_Convert::convertArray( $cell,'tmp'.$level,$global,$level );
+                    $var    .= $varname . "[$jskey] = tmp$level\n";
+                    $var    .= "tmp$level = null\n";
+                } else {
+                    $value  = is_string($cell)?'"' . HTML_Javascript_Convert::escapeString($cell) . '"':$cell;
+                    $var    .= $varname . "[$jskey] = $value\n";
+                }
             }
-            if (is_string($cell)) {
-                $cell = $this->escapeString($cell);
-
-                $var .= '"'.$cell.'"';
-            } else {
-                $var .= $cell;
-            }
-
+            return $var;
+        } else {
+            return PEAR::raiseError('Invalid variable type, array expected', HTML_JAVASCRIPT_ERROR_INVVAR);
         }
-        $var .= ')';
-        return $var."\n";
-    }
+    } // }}} convertArray
 }

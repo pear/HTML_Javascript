@@ -23,7 +23,7 @@ require_once('PEAR.php');
 /**
 * A class for converting PHP variables into Javascript variables
 *
-* Usage:
+* Usage example:
 *
 * echo "<html><head><title>lala</title></head><body>";
 * $js = new HTML_Javascript();
@@ -276,15 +276,3 @@ class HTML_Javascript extends PEAR
         }
     }
 }
-
-//TESTS
-echo "<html><head><title>lala</title></head><body>";
-$js = new HTML_Javascript();
-echo $js->startScript();
-echo $js->convertString("Hello,\n My name is tal peer", 'foo', true);
-echo $js->writeLine('foo', true);
-$a = array('foo','bar','foobarism',1,98,$js);
-echo $js->convertArray($a, 'bar', true);
-echo $js->writeLine('bar', true);
-echo $js->endScript();
-echo "</body></html>";

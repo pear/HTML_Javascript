@@ -32,6 +32,7 @@ echo HTML_Javascript_Convert::convertArray( $test, 'arTest', true );
 echo HTML_Javascript::alert('toto');
 echo HTML_Javascript::prompt('toto','toto');
 echo $js->popup('win', './test.html', 'window', 200, 200, false);
+echo $js->popupWrite('win2', 'Foo? Bar!', 'window2222222222222222222222', 200, 200, true);
 echo $js->endScript();
 ?>
 <script>

@@ -43,6 +43,7 @@ define('HTML_JAVASCRIPT_ERROR_NOEND', 501, true);
 
 require_once('PEAR.php');
 require_once('HTML/Javascript/Convert.php');
+require_once('System.php');
 
 /**
 * A class for performing basic JavaScript operations
@@ -256,7 +257,35 @@ class HTML_Javascript extends PEAR
                 }
             }
         }
-        return $assign . "= window.open(\"$file\", \"$title\", \"width=$width, height=$height, resizable=$attr[0], scrollbars=$attr[1], menubar=$attr[2], toolbar=$attr[3], status=$attr[4], location=$attr[5], top=$attr[6], left=$attr[7]\")";  
+        return $assign . "= window.open(\"$file\", \"$title\", \"width=$width, height=$height, resizable=$attr[0], scrollbars=$attr[1], menubar=$attr[2], toolbar=$attr[3], status=$attr[4], location=$attr[5], top=$attr[6], left=$attr[7]\")\n";  
     }
     // }}} popup
+
+    // {{{ popupWrite
+    /**
+    * Creates a new popup window containing a string
+    *
+    * @param  string $assign the JS variable to assign the window to
+    * @param  string $str    the string that will appear in the new window (HTML tags would be parsed by the browser, of course)
+    * @param  string $title  the title of the window
+    * @param  int    $width  the width of the window
+    * @param  int    $height the height of the window
+    * @param  mixed  $attr   see popup()
+    * @param  int    $top    distance from the top (in pixels
+    * @param  int    $left   distance from the left (in pixels)
+    * @see    popup()
+    * @return the processed string
+    */
+    function popupWrite($assign, $str, $title, $width, $height, $attr, $top = 300, $left = 300)
+    {
+        $tmpdir = System::tmpdir();
+        $path   = $tmpdir . '/htmljs_' . time();
+
+        $fd = fopen($path, 'w');
+        fwrite($fd, $str);
+        fclose($fd);
+
+        return $this->popup($assign, $path, $title, $width, $height, $attr, $top, $left);
+    }
+    /// }}} popupWrite
 }

@@ -322,3 +322,4 @@ class HTML_Javascript extends PEAR
         return $assign . ' = ' . $confirm;
     } // }}} confirm
 }
+?>

@@ -28,8 +28,8 @@
   </maintainers>
 
   <release>
-    <version>1.1.0</version>
-    <date>2003-05-02</date>
+    <version>1.x.x</version>
+    <date>2003-xx-xx</date>
     <state>stable</state>
     <license>PHP 3.0</license>
     <notes>

@@ -259,7 +259,8 @@ class HTML_Javascript_Convert
             $length = sizeof($arr);
             $var    .= $varname . ' = Array('. $length .')'.HTML_JAVASCRIPT_NL;
             foreach ( $arr as $key=>$cell ){
-                $jskey  = is_int($key)?$key:'"' . $key . '"';
+                //$jskey  = is_int($key)?$key:'"' . $key . '"';
+                $jskey  = '"' . $key . '"';
                 if ( is_array( $cell ) ){
                     $level++;
                     $var    .= HTML_Javascript_Convert::convertArray(
@@ -311,7 +312,7 @@ class HTML_Javascript_Convert
             $convert = $global?'var ':'';
             $convert .= $new?$varname.'={'.HTML_JAVASCRIPT_NL:'{';
             foreach( $array as $key=>$val) {
-                $key = $key?$key:'0';
+                $key = $key?'"'.$key.'"':"'0'";
                 $convert .= $key.':';
                 if(is_array($val)){
                     $convert .= HTML_Javascript_Convert::convertArrayToProperties($val,'',false, false);

@@ -494,7 +494,7 @@ class HTML_Javascript
                 if($attr) {
                     $attr = array('yes', 'yes', 'yes', 'yes', 'yes', 'yes', $top, $left);
                 } else {
-                    $attr = array('no', 'no', 'no', 'no', 'no', 'no', $top, $height);
+                    $attr = array('no', 'no', 'no', 'no', 'no', 'no', $top, $left);
                 }
             }
         }

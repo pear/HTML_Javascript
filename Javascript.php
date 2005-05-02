@@ -479,8 +479,8 @@ class HTML_Javascript
      *                          status, location.
      *                          Can be also a boolean, and then all the attributes
      *                          are set to yes or no, according to the boolean value.
-     * @param  int   $top       the distance from the top, in pixels.
-     * @param  int   $left      the distance from the left, in pixels.
+     * @param  int   $top       the distance from the top, in pixels (only used if attr=false|true).
+     * @param  int   $left      the distance from the left, in pixels (only used if attr=false|true).
      * @return mixed PEAR_Error on error or the processed string.
      */
     function popup(

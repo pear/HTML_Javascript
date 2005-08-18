@@ -113,6 +113,7 @@ class HTML_Javascript_Convert
                 return HTML_Javascript_Convert::convertBoolean(
                             $var, $varname, $global
                         );
+                        
             case 'integer':
             case 'double':
                 $ret = '';
@@ -121,18 +122,22 @@ class HTML_Javascript_Convert
                 }
                 $ret .= $varname.' = '.$var;
                 return $ret.';'.HTML_JAVASCRIPT_NL;
+                
             case 'string':
                 return HTML_Javascript_Convert::convertString(
                             $var, $varname, $global
                         );
+                        
             case 'array':
                 return HTML_Javascript_Convert::convertArray(
                             $var, $varname, $global
                         );
+                        
             case 'NULL':
                 return HTML_Javascript_Convert::convertNull(
                             $varname, $global
                         );
+                        
             default:
                 return HTML_Javascript_Convert::raiseError(
                         HTML_JAVASCRIPT_ERROR_CONVERT_INVVAR, __FUNCTION__.':'.$var_type
@@ -153,12 +158,13 @@ class HTML_Javascript_Convert
      */
     function raiseError($code,$str='')
     {
-        require_once('PEAR.php');
-	switch ($code) {
+        require_once 'PEAR.php';
+        switch ($code) {
             case HTML_JAVASCRIPT_CONVERT_ERROR_INVVAR:
                 return PEAR::raiseError(
                     'Invalid variable:'.$str, $code 
                 );
+                
             default:
                 return PEAR::raiseError(
                     'Unknown Error:'.$str, $code 
@@ -182,7 +188,7 @@ class HTML_Javascript_Convert
     function convertString($str, $varname, $global = false)
     {
         $var = '';
-        if($global) {
+        if ($global) {
             $var = 'var ';
         }
         $str = HTML_Javascript_Convert::escapeString($str);
@@ -207,7 +213,7 @@ class HTML_Javascript_Convert
     function convertBoolean($bool, $varname, $global = false)
     {
         $var = '';
-        if($global) {
+        if ($global) {
             $var = 'var ';
         }
         $var    .= $varname.' = ';
@@ -304,9 +310,7 @@ class HTML_Javascript_Convert
      * @param  boolean $new     if true, the JS var will be set
      * @return mixed   a PEAR_Error or the converted array
      */
-    function convertArrayToProperties(
-        $array, $varname, $global=false, $new=true
-    )
+    function convertArrayToProperties( $array, $varname, $global=false, $new=true )
     {
         if(is_array($array)){
             $cnt = sizeof($array)-1;
@@ -348,17 +352,22 @@ class HTML_Javascript_Convert
         switch ( gettype($val) ) {
             case 'boolean':
                 return $val ? 'true' : 'false';
+                
             case 'integer':
             case 'double':
                 return $val;
+                
             case 'string':
                 return "'".HTML_Javascript_Convert::escapeString($val)."'";
+                
             case 'array':
                 return HTML_Javascript_Convert::convertArray(
                             $val, $varname, $global
                         );
+                        
             case 'NULL':
                 return 'null';
+                
             default:
                 return HTML_Javascript_Convert::raiseError(
                         HTML_JAVASCRIPT_ERROR_CONVERT_INVVAR, __FUNCTION__.':'.gettype($val)

@@ -100,7 +100,7 @@ if(!defined('HTML_JAVASCRIPT_NL')){
 }
 
 /** Convertion tools */
-require_once('HTML/Javascript/Convert.php');
+require_once 'HTML/Javascript/Convert.php';
 
 /**
  * Main Javascript class
@@ -135,18 +135,7 @@ class HTML_Javascript
      */
     var $_file = '';
 
-    // {{{ HTML_Javascript
-
-    /**
-     * Constructor - creates a new HTML_Javascript object
-     *
-     * @access public
-     */
-    function HTML_Javascript()
-    {
-    }
-
-    // }}} HTML_Javascript
+      
     // {{{ setOutputMode
 
     /**
@@ -213,18 +202,21 @@ class HTML_Javascript
                         HTML_JAVASCRIPT_ERROR_NOSTART
                         );
                 break;
+                
             case HTML_JAVASCRIPT_ERROR_NOEND:
                 $ret = PEAR::raiseError(
                         'Last script was not ended',
                         HTML_JAVASCRIPT_ERROR_NOEND
                         );
                 break;
+                
             case HTML_JAVASCRIPT_ERROR_NOFILE:
                 $ret = PEAR::raiseError(
                         'A filename must be specified for setoutputMode()',
                         HTML_JAVASCRIPT_ERROR_NOFILE
                         );
                 break;
+                
             default:
                 return PEAR::raiseError(
                         'Unknown Error',
@@ -255,7 +247,6 @@ class HTML_Javascript
     {
         $this->_started = true;
         $s      = $defer ? 'defer="defer"' : '';
-        //$s      = $defer ? 'defer' : '';
         $ret    = "<script type=\"text/javascript\" ".$s.">".
                     HTML_JAVASCRIPT_NL;
         return $ret;
@@ -303,18 +294,18 @@ class HTML_Javascript
             return $str;
         }
         switch($mode) {
-            case HTML_JAVASCRIPT_OUTPUT_RETURN: {
+            case HTML_JAVASCRIPT_OUTPUT_RETURN:  
                 return $str;
                 break;
-            }
+             
 
-            case HTML_JAVASCRIPT_OUTPUT_ECHO: {
+            case HTML_JAVASCRIPT_OUTPUT_ECHO: 
                 echo $str;
                 return true;
                 break;
-            }
+             
 
-            case HTML_JAVASCRIPT_OUTPUT_FILE: {
+            case HTML_JAVASCRIPT_OUTPUT_FILE:  
                 if ($fp = @fopen($file, 'ab')){
                     fwrite($fp, $str);
                 } else {
@@ -322,11 +313,11 @@ class HTML_Javascript
                 }
                 return true;
                 break;
-            }
-            default: {
+             
+            default:  
                 HTML_Javascript::raiseError('Invalid output mode');
                 break;
-            }
+             
         }
     }
 
@@ -372,17 +363,17 @@ class HTML_Javascript
     function writeLine($str, $var = false)
     {
         if ($var) {
-            $ret = HTML_Javascript::_out(
+            return HTML_Javascript::_out(
                     'document.writeln('.$str.'+"<br />")'.HTML_JAVASCRIPT_NL
                     );
-        } else {
-            $ret = HTML_Javascript::_out(
-                        'document.writeln("'.
-                        HTML_Javascript_Convert::escapeString($str).
-                        '"+"<br />")'.HTML_JAVASCRIPT_NL
-                    );
         }
-        return $ret;
+        
+        return HTML_Javascript::_out(
+                    'document.writeln("'.
+                    HTML_Javascript_Convert::escapeString($str).
+                    '"+"<br />")'.HTML_JAVASCRIPT_NL
+                );
+        
     }
 
     // }}} writeLine

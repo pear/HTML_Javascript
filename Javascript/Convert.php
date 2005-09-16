@@ -279,11 +279,24 @@ class HTML_Javascript_Convert
                                 HTML_JAVASCRIPT_NL;
                     $var    .= "tmp$level = null".HTML_JAVASCRIPT_NL;
                 } else {
-                    $value  = is_string($cell)?
-                                '"' .
-                                HTML_Javascript_Convert::escapeString($cell) .
-                                '"'
-                                :$cell;
+                    switch(gettype($cell)) { 
+                        case 'string':
+                            $value = '"' .HTML_Javascript_Convert::escapeString($cell) . '"';
+                            break;
+                            
+                        case 'double':
+                        case 'integer':
+                            $value = $cell;
+                            break; 
+                            
+                        case 'NULL':
+                            $value = 'null';
+                            break;
+                            
+                        default:
+                           $value = '"unsupported type"';
+                           
+                    }
                     $var    .= $varname . "[$jskey] = $value".
                                 HTML_JAVASCRIPT_NL;
                 }

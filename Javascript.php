@@ -75,6 +75,18 @@ define('HTML_JAVASCRIPT_ERROR_NOFILE', 505, true);
  */
 define('HTML_JAVASCRIPT_ERROR_WRITEFILE', 506, true);
 
+/**
+ * Incorrect function argument 
+ */
+define('HTML_JAVASCRIPT_ERROR_INCORRECT_ARGUMENT', 507, true);
+
+/**
+ *Invalid output mode
+ */
+define('HTML_JAVASCRIPT_ERROR_INVALID_OUTPUT_MODE', 508, true);
+
+
+
 //Output modes
 /**
  * Just return the results (default mode)
@@ -154,11 +166,10 @@ class HTML_Javascript
     function setOutputMode($mode = HTML_JAVASCRIPT_OUTPUT_RETURN, $file = NULL)
     {
         if($mode == HTML_JAVASCRIPT_OUTPUT_FILE ) {
-            if(isset($file)) {
-                $this->_file = $file;
-            } else {
-                $this->raiseError(HTML_JAVASCRIPT_ERROR_NOFILE);
+            if(!isset($file)) {
+                return $this->raiseError(HTML_JAVASCRIPT_ERROR_NOFILE);
             }
+            $this->_file = $file;
         }
         $this->_mode = $mode;
         return true;
@@ -188,38 +199,56 @@ class HTML_Javascript
      *
      * @access private
      * @param  integer  $code the error code
+     * @param  string   $message the error message (if not using default.
      * @return mixed    false if the error code is invalid,
      *                  or a PEAR_Error otherwise
      */
-    function raiseError($code)
+    function raiseError($code, $message=false)
     {
         $ret = null;
+        if (!is_string($message)) {
+            $message=false;
+        }
         require_once 'PEAR.php';
         switch ($code) {
             case HTML_JAVASCRIPT_ERROR_NOSTART:
                 $ret = PEAR::raiseError(
-                        'No script started',
+                        $message ? $message : 'No script started',
                         HTML_JAVASCRIPT_ERROR_NOSTART
                         );
                 break;
                 
             case HTML_JAVASCRIPT_ERROR_NOEND:
                 $ret = PEAR::raiseError(
-                        'Last script was not ended',
+                        $message ? $message : 'Last script was not ended',
                         HTML_JAVASCRIPT_ERROR_NOEND
                         );
                 break;
                 
             case HTML_JAVASCRIPT_ERROR_NOFILE:
                 $ret = PEAR::raiseError(
-                        'A filename must be specified for setoutputMode()',
+                        $message ? $message : 'A filename must be specified for setoutputMode()',
                         HTML_JAVASCRIPT_ERROR_NOFILE
                         );
                 break;
-                
+
+            case HTML_JAVASCRIPT_ERROR_INCORRECT_ARGUMENT:
+            	$ret = PEAR::raiseError(
+             		$message ? $message : 'Incorrect argument for function call',
+                    HTML_JAVASCRIPT_ERROR_INCORRECT_ARGUMENT
+                    );
+                break;
+
+            case HTML_JAVASCRIPT_ERROR_INVALID_OUTPUT_MODE:
+            	$ret = PEAR::raiseError(
+             		$message ? $message : 'Invalid output mode',
+                    HTML_JAVASCRIPT_ERROR_INVALID_OUTPUT_MODE
+                    );
+                break;
+
             default:
                 return PEAR::raiseError(
-                        'Unknown Error',
+                        $message ? $message : 'Unknown Error',
                         HTML_JAVASCRIPT_ERROR_UNKNOWN
                         );
                 break;
@@ -315,7 +344,7 @@ class HTML_Javascript
                 break;
              
             default:  
-                HTML_Javascript::raiseError('Invalid output mode');
+                HTML_Javascript::raiseError(HTML_JAVASCRIPT_ERROR_INVALID_OUTPUT_MODE);
                 break;
              
         }
@@ -480,14 +509,15 @@ class HTML_Javascript
     {
         if(!is_array($attr)) {
             if(!is_bool($attr)) {
-                PEAR::raiseError('$attr should be either an array or a boolean');
+                return PEAR::raiseError(HTML_JAVASCRIPT_ERROR_INCORRECT_ARGUMENT,
+                    __FUNCTION__.': $attr should be either an array or a boolean');
+            } 
+            if($attr) {
+                $attr = array('yes', 'yes', 'yes', 'yes', 'yes', 'yes', $top, $left);
             } else {
-                if($attr) {
-                    $attr = array('yes', 'yes', 'yes', 'yes', 'yes', 'yes', $top, $left);
-                } else {
-                    $attr = array('no', 'no', 'no', 'no', 'no', 'no', $top, $left);
-                }
+                $attr = array('no', 'no', 'no', 'no', 'no', 'no', $top, $left);
             }
+            
         }
         $ret = HTML_Javascript::_out(
                     $assign .

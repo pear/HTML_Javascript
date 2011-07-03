@@ -557,5 +557,34 @@ class HTML_Javascript
     }
 
     // }}} popupWrite
+
+    // {{{ embedFile
+    /**
+     * Add a script tag(s) with src
+     *
+     * @param  mixed  $filename an array containing the filenames to be added
+     *                          or a string with the file name for a single file
+     * @return mixed PEAR_Error on error or the processed string or true depending on output mode.
+     * @author Kappos Georgios
+     */
+    function scriptSrc($filename){
+
+        if(!is_array($filename)){
+            if(!is_string($filename)){
+                return PEAR::raiseError('$filename should be either an array or a string');
+            }
+            $embed = '<script type="text/javascript" src="'.$filename.'"></script>'.HTML_JAVASCRIPT_NL;
+            return HTML_Javascript::_out($embed);
+        }
+
+        $embed = '';
+        foreach($filename as $file) {
+            $embed = '<script type="text/javascript" src="'.$file.'"></script>'.HTML_JAVASCRIPT_NL;
+        }
+        return HTML_Javascript::_out($embed);
+        return $ret;
+      
+    }
+    // }}} embedFile
 }
-?>
+

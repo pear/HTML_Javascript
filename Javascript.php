@@ -594,7 +594,8 @@ class HTML_Javascript
      *
      * @param  mixed  $filename an array containing the filenames to be added
      *                          or a string with the file name for a single file
-     * @return mixed PEAR_Error on error or the processed string or true depending on output mode.
+     * @return mixed PEAR_Error on error or the embed string,
+     *               boolean if the output is not set HTML_JAVASCRIPT_OUTPUT_RETURN;
      * @author Kappos Georgios
      */
     function scriptSrc($filename){

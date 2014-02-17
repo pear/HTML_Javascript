@@ -1,0 +1,38 @@
+{
+    "authors": [
+        {
+            "email": "alan_k@php.net",
+            "name": "Alan Knowles",
+            "role": "Lead"
+        },
+        {
+            "email": "tal@php.net",
+            "name": "Tal Peer",
+            "role": "Helper"
+        },
+        {
+            "email": "paj@pearfr.org",
+            "name": "Pierre-Alain Joye",
+            "role": "Helper"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "./"
+        ]
+    },
+    "description": "More info available on: http://pear.php.net/package/HTML_Javascript",
+    "license": "PHP 3.0",
+    "name": "pear/html_javascript",
+    "support": {
+        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=HTML_Javascript",
+        "source": "https://github.com/pear/HTML_Javascript"
+    },
+    "type": "library",
+    "require": {
+        "pear/pear_exception": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}
